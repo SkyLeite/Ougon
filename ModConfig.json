@@ -1,0 +1,21 @@
+{
+  "ModId": "Ougon_Trainer",
+  "ModName": "Ougon Trainer",
+  "ModAuthor": "Sky",
+  "ModVersion": "1.0.0",
+  "ModDescription": "Description",
+  "ModDll": "Ougon Trainer.dll",
+  "ModIcon": "Preview.png",
+  "ModR2RManagedDll32": "x86/Ougon Trainer.dll",
+  "ModR2RManagedDll64": "x64/Ougon Trainer.dll",
+  "ModNativeDll32": "",
+  "ModNativeDll64": "",
+  "IsLibrary": false,
+  "ReleaseMetadataFileName": "Ougon_Trainer.ReleaseMetadata.json",
+  "PluginData": {},
+  "IsUniversalMod": false,
+  "ModDependencies": [ "reloaded.sharedlib.hooks" ],
+  "OptionalDependencies": [],
+  "SupportedAppId": ["ougon"],
+  "ProjectUrl": ""
+}
