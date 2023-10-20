@@ -1,23 +1,14 @@
-﻿using Ougon_Trainer.Configuration;
-using Ougon_Trainer.Template;
-using Reloaded.Hooks.ReloadedII.Interfaces;
+﻿using Ougon.Configuration;
+using Ougon.Template;
 using Reloaded.Mod.Interfaces;
-using System.Runtime.CompilerServices;
-// using Reloaded.Memory;
-// using Reloaded.Memory.Pointers;
+using System.Runtime.InteropServices;
 using System.Diagnostics;
 using Reloaded.Hooks.Definitions.X86;
 using Reloaded.Hooks.Definitions;
 using Reloaded.Memory.Sigscan;
 using ImGuiNET;
-using static ImGuiNET.ImGuiNative;
-using System.Runtime.InteropServices;
-using Reloaded.Hooks.Definitions.Structs;
-using Reloaded.Imgui;
-using Reloaded.Imgui.Hook;
-using Reloaded.Imgui.Hook.Implementations;
 
-namespace Ougon_Trainer
+namespace Ougon
 {
     /// <summary>
     /// Your mod logic goes here.
@@ -55,6 +46,8 @@ namespace Ougon_Trainer
         /// </summary>
         private readonly IModConfig _modConfig;
 
+        private unsafe GameState* _gameState;
+
         [Function(CallingConventions.Stdcall)]
         public delegate void Render();
         private IHook<Render> _renderHook;
@@ -63,12 +56,69 @@ namespace Ougon_Trainer
         public delegate void EndScene();
         private IHook<EndScene> _endSceneHook;
 
+        [Function(CallingConventions.Cdecl)]
+        public unsafe delegate void LoadCharacters(ushort* param_1, void* param_2, int* param_3);
+        private IHook<LoadCharacters> _loadCharactersHook;
+
+        [Function(CallingConventions.Cdecl)]
+        public unsafe delegate void Debug(char* param_1, char* param2);
+        private IHook<Debug> _debugHook;
+
+        [Function(CallingConventions.MicrosoftThiscall)]
+        public unsafe delegate void CalculateHealth(Something* _this, int param_1);
+        private IHook<CalculateHealth> _calculateHealthHook;
+
+        [Function(CallingConventions.MicrosoftThiscall)]
+        public unsafe delegate void TickMatch(Match* match, char param_1);
+        private IHook<TickMatch> _tickMatchHook;
+
         private double FrameInterval; // Time per frame in milliseconds
         private nuint BaseAddress;
-        private int vsInitDirectXOffset;
-        private int displayAdapterAssignmentOffset;
+        private nint _setTimerAddress;
+        private Ougon.GUI.Debug? _gui;
+        private Context _context;
 
-        public unsafe void MyRender() {
+        // AttackType:
+        // 0 = normal hit
+        // 1 = grab / command grab
+        // 2 = OTG
+        private unsafe void MyCalculateHealth(Something* _this, int attackType)
+        {
+            var character = *(int*)((int)_this + 0x2a604);
+            var health = *(short*)(character + 0x2aa9c);
+            var grayHealth = *(short*)(character + 0x2aaaa);
+            _logger.WriteLineAsync($"[MyCalculateHealth] attackType: {attackType} | baseAddress: {new IntPtr((int)_this).ToString("x")} | characterAddress: {new IntPtr((int)_this + 0x2a604).ToString("x")} | originalHealth: {health} | grayHealth: {grayHealth}");
+            _calculateHealthHook.OriginalFunction(_this, attackType);
+        }
+
+        public unsafe void MyLoadCharacters(ushort* param_1, void* param_2, int* param_3)
+        {
+            var p = new IntPtr(param_2);
+            _logger.WriteLineAsync($"[MyLoadCharacters] param_2 address: {new IntPtr(param_2).ToString("x")} | param_3: {*param_3}");
+
+            var base_addr = param_1 + 0x20;
+
+            _logger.WriteLineAsync($"[MyLoadCharacters] base_addr: {*(base_addr)}");
+            _logger.WriteLineAsync($"[MyLoadCharacters] base_addr + 1: {*(base_addr + 1)}");
+            _logger.WriteLineAsync($"[MyLoadCharacters] base_addr + 2: {*(base_addr + 2)}");
+            _logger.WriteLineAsync($"[MyLoadCharacters] base_addr + 1: {*(base_addr + 3)}");
+            _loadCharactersHook.OriginalFunction(param_1, param_2, param_3);
+        }
+
+        public unsafe void MyDebug(char* param_1, char* param_2)
+        {
+            _logger.WriteLineAsync($"[MyDebug] param_1: {Marshal.PtrToStringAnsi((IntPtr)param_1) + Marshal.PtrToStringAnsi((IntPtr)param_2)}");
+        }
+
+        public unsafe void MyRender()
+        {
+            // var timerPointer = (int**)(_setTimerAddress + 2);
+            // if (timerPointer != null)
+            // {
+            //     var timerAddress = *timerPointer;
+            //     *timerAddress = 3000;
+            // }
+
             // Record the start time of the frame
             double startTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
@@ -86,46 +136,12 @@ namespace Ougon_Trainer
             }
         }
 
-        [StructLayout(LayoutKind.Explicit)]
-        public unsafe struct GameStruct
-        {
-            [FieldOffset(0x4f4)]
-            public int* DX9Device;
-
-            [FieldOffset(0x480)]
-            public float fps;
-
-            [FieldOffset(0x4b4)]
-            public bool debugDisabled;
-
-            [FieldOffset(0x3c)]
-            public bool isFullScreen;
-
-            [FieldOffset(0x30)]
-            public int isRunning;
-
-            [FieldOffset(0x34)]
-            public bool isWindowed;
-        }
-
         public unsafe void MyEndScene()
         {
-            var memory = Reloaded.Memory.Memory.Instance;
-            //var displayAdapterPointer = (int*)(this.vsInitDirectXOffset + this.displayAdapterAssignmentOffset);
-            //var displayAdapterValue = *displayAdapterPointer;
-            //var displayAdapter = (int*)(displayAdapterValue + 0x20);
-            //var displayAdaptarWhatever = *displayAdapter;
+            var str = (GameState**)(BaseAddress + 0xf17f8);
+            this._gameState = *str;
 
-            //_logger.WriteLine($"displayAdaoter: {*this.displayAdapterAddress}");
-
-            //nuint theImportantStructOffset = 0xf17f8;
-            //var importantStructAddress = (nuint**)(this.BaseAddress + theImportantStructOffset);
-            //memory.ReadWithMarshallingOutParameter<GameStruct>((**importantStructAddress), out var gameStruct);
-            //var isWindowed = memory.Read<byte>(importantStructAddress + 0x34);
-
-            //_logger.WriteLine($"fps {memory.Read<float>((**importantStructAddress) + 0x480)}");
-            //_logger.WriteLine($"isFullscreen {gameStruct.isFullScreen}");
-            //_logger.WriteLine($"isRunning {gameStruct.isRunning}");
+            new Ougon.GUI.Debug(_hooks, _gameState, _context);
 
             _endSceneHook.OriginalFunction();
         }
@@ -145,22 +161,9 @@ namespace Ougon_Trainer
 
         private void RenderTestWindow()
         {
-            ImGuiNET.ImGui.ShowDemoWindow();
+            ImGui.ShowDemoWindow();
         }
 
-        private async Task InitializeImgui()
-        {
-
-            SDK.Init(_hooks);
-
-            await ImguiHook.Create(RenderTestWindow, new ImguiHookOptions()
-            {
-                Implementations = new List<IImguiHook>()
-                {
-                    new ImguiHookDx9(), // `Reloaded.Imgui.Hook.Direct3D9`
-                }
-            }).ConfigureAwait(false);
-        }
 
         unsafe public Mod(ModContext context)
         {
@@ -171,23 +174,13 @@ namespace Ougon_Trainer
             _owner = context.Owner;
             _configuration = context.Configuration;
             _modConfig = context.ModConfig;
-
+            _context = new Context();
             this.FrameInterval = 1000.0 / _configuration.FPSLimit;
 
-
-            // For more information about this template, please see
-            // https://reloaded-project.github.io/Reloaded-II/ModTemplate/
-
-            // If you want to implement e.g. unload support in your mod,
-            // and some other neat features, override the methods in ModBase.
-
-
-            // TODO: Implement some mod logic
-            // var meterAddress = baseAddress + 0x0014F3F4;
-            // var meterPointer = new Ptr<float>((float*)meterAddress);
-            // float * meter = meterPointer;
-
             var thisProcess = Process.GetCurrentProcess();
+            if (thisProcess.MainModule == null)
+                throw new Exception("Could not find the process' main module");
+
             var baseAddress = thisProcess.MainModule.BaseAddress;
             var exeSize = thisProcess.MainModule.ModuleMemorySize;
             this.BaseAddress = (nuint)baseAddress;
@@ -205,34 +198,54 @@ namespace Ougon_Trainer
 
             var endSceneResult = scanner.FindPattern("A1 ?? ?? ?? ?? 8B 80 ?? ?? ?? ?? 50 8B 08 FF 91 A8 ?? ?? ?? 3D 6C 08 76 88 75 ?? 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? 59 C3 ?? ?? ?? ?? ?? ?? ?? ?? ??");
             if (!endSceneResult.Found)
-                 throw new Exception("EndScene not found");
+                throw new Exception("EndScene not found");
 
             var endScenePointer = baseAddress + endSceneResult.Offset;
             _endSceneHook = _hooks.CreateHook<EndScene>(MyEndScene, (long)endScenePointer).Activate();
 
-            var vsInitDirectXResult = scanner.FindPattern("55 8B EC 56 8B 35 ?? ?? ?? ?? 68 ?? ?? ?? ?? E8");
-            if (!vsInitDirectXResult.Found)
-                 throw new Exception("vsInitDirectX not found");
+            var loadCharactersResult = scanner.FindPattern("55 8B EC 81 EC 90 00 00 00 A1 ?? ?? ?? ?? 33 C5 89 45 ?? 8B 45");
+            if (!loadCharactersResult.Found)
+                throw new Exception("LoadCharacters not found");
 
-            this.vsInitDirectXOffset = vsInitDirectXResult.Offset;
-            this.displayAdapterAssignmentOffset = 0x1e;
-            this.InitializeImgui().Wait();
+            var loadCharactersPointer = baseAddress + loadCharactersResult.Offset;
+            _loadCharactersHook = _hooks.CreateHook<LoadCharacters>(MyLoadCharacters, (long)loadCharactersPointer).Activate();
 
+            var debugResult = scanner.FindPattern("55 8B EC 81 EC 04 01 00 00 A1 ?? ?? ?? ?? 33 C5 89 45 ?? 83 3D ?? ?? ?? ?? 00");
+            if (!debugResult.Found)
+                throw new Exception("Debug not found");
 
-            // var devicePointer = (int**)(endScenePointer + 4);
-            // var device = *devicePointer;
+            var debugPointer = baseAddress + debugResult.Offset;
+            _debugHook = _hooks.CreateHook<Debug>(MyDebug, (long)debugPointer).Activate();
 
-            //_logger.WriteLine((*device).ToString());
+            var calculateHealthHook = scanner.FindPattern("55 8B EC 8B 45 ?? 53 56 57 8B F9 8B 8F");
+            if (!calculateHealthHook.Found)
+                throw new Exception("CalculateHealth not found");
 
-            //var igContext = ImGuiNET.ImGuiNative.igCreateContext(null);
-            //ImGuiNET.ImGuiNative.ImGui_ImplDX9_Init(device);
-            //ImGui_ImplDX9_NewFrame();
-            //igShowDemoWindow((byte*)1);
-            //igEndFrame();
-            //igRender();
-            //var data = igGetDrawData();
-            //_logger.WriteLine((*data).Valid.ToString());
+            var calculateHealthPointer = baseAddress + calculateHealthHook.Offset;
+            _calculateHealthHook = _hooks.CreateHook<CalculateHealth>(MyCalculateHealth, (long)calculateHealthPointer).Activate();
 
+            var tickMatchHook = scanner.FindPattern("55 8B EC 83 EC 0C 56 8B F1 57");
+            if (!tickMatchHook.Found)
+                throw new Exception("TickMatch not found");
+
+            var tickMatchPointer = baseAddress + tickMatchHook.Offset;
+            _tickMatchHook = _hooks.CreateHook<TickMatch>(MyTickMatch, (long)tickMatchPointer).Activate();
+        }
+
+        private unsafe string GetAddr(void* ptr)
+        {
+            return new IntPtr(ptr).ToString("x");
+        }
+
+        private unsafe void MyTickMatch(Match* match, char param_1)
+        {
+            _context.match = match;
+            _tickMatchHook.OriginalFunction(match, param_1);
+
+            if (_context.timerLocked == true)
+            {
+                _context.match->timer = 10800;
+            }
         }
 
         #region Standard Overrides
@@ -243,7 +256,7 @@ namespace Ougon_Trainer
             _configuration = configuration;
             _logger.WriteLine($"[{_modConfig.ModId}] Config Updated: Applying");
 
-            this.FrameInterval = 1000.0 / configuration.FPSLimit; 
+            this.FrameInterval = 1000.0 / configuration.FPSLimit;
         }
         #endregion
 

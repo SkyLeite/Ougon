@@ -3,13 +3,13 @@
  * to make it easier to upgrade to newer versions of the template.
 */
 
-using Ougon_Trainer.Configuration;
-using Ougon_Trainer.Template.Configuration;
+using Ougon.Configuration;
+using Ougon.Template.Configuration;
 using Reloaded.Hooks.ReloadedII.Interfaces;
 using Reloaded.Mod.Interfaces;
 using Reloaded.Mod.Interfaces.Internal;
 
-namespace Ougon_Trainer.Template
+namespace Ougon.Template
 {
     public class Startup : IMod
     {

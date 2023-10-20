@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Ougon_Trainer.Template.Configuration
+namespace Ougon.Template.Configuration
 {
     public class Utilities
     {

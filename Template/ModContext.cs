@@ -1,8 +1,8 @@
-﻿using Ougon_Trainer.Configuration;
+﻿using Ougon.Configuration;
 using Reloaded.Mod.Interfaces;
 using IReloadedHooks = Reloaded.Hooks.ReloadedII.Interfaces.IReloadedHooks;
 
-namespace Ougon_Trainer.Template
+namespace Ougon.Template
 {
     /// <summary>
     /// Represents information passed in from the mod loader template to the implementing mod.

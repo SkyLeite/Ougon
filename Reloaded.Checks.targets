@@ -2,6 +2,6 @@
 	
   <!-- Checks if environment variables are set -->
   <Target Name="ReloadedEnvironmentVariableCheck" BeforeTargets="Build">
-    <Warning Condition="$(RELOADEDIIMODS) == ''" Text="RELOADEDIIMODS environment variable is not set. Make sure you set this variable to the path of your Reloaded-II mods folder." />
+    <Error Condition="$(RELOADEDIIMODS) == ''" Text="RELOADEDIIMODS environment variable is not set. Make sure you set this variable to the path of your Reloaded-II mods folder." />
   </Target>
 </Project>

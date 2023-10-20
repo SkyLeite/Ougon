@@ -162,8 +162,8 @@ param (
     $UseScriptDirectory=$True,
 
     ## => User Config <= ## 
-    $ProjectPath = "Ougon_Trainer.csproj",
-    $PackageName = "Ougon_Trainer",
+    $ProjectPath = "Ougon.csproj",
+    $PackageName = "Ougon",
     $PublishOutputDir = "Publish/ToUpload",
 
     ## => User: Delta Config
@@ -180,7 +180,7 @@ param (
 
     $GameBananaItemId = 333681, # From mod page URL.
 
-    $NuGetPackageId = "Ougon_Trainer",
+    $NuGetPackageId = "Ougon",
     $NuGetFeedUrl = "http://packages.sewer56.moe:5000/v3/index.json",
     $NuGetAllowUnlisted = $False,
 

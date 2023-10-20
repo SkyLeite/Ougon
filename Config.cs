@@ -1,8 +1,8 @@
-﻿using Ougon_Trainer.Template.Configuration;
+﻿using Ougon.Template.Configuration;
 using Reloaded.Mod.Interfaces.Structs;
 using System.ComponentModel;
 
-namespace Ougon_Trainer.Configuration
+namespace Ougon.Configuration
 {
     public class Config : Configurable<Config>
     {

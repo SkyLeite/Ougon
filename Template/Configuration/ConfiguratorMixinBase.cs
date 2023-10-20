@@ -1,7 +1,7 @@
-﻿using Ougon_Trainer.Configuration;
+﻿using Ougon.Configuration;
 using Reloaded.Mod.Interfaces;
 
-namespace Ougon_Trainer.Template.Configuration
+namespace Ougon.Template.Configuration
 {
     /// <summary>
     /// Creates the various different configurations used by the mod.

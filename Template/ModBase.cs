@@ -1,6 +1,6 @@
-﻿using Ougon_Trainer.Configuration;
+﻿using Ougon.Configuration;
 
-namespace Ougon_Trainer.Template
+namespace Ougon.Template
 {
     /// <summary>
     /// Base class for implementing mod functionality.
