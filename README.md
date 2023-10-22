@@ -15,9 +15,15 @@ The following is a list of my goals with this mod, in no particular order. Some 
 ### Misc
 * ✔️ ImGui-based in-game overlay
 * 🏁 Load move data from a file, allowing users to create and share modifications for rebalancing
+* 🏁 Add video settings in-game
 
 ### Bugfixes
-* ✔️ Fixed running at the incorrect speed in higher refresh rate monitors by implementing an FPS limiter (configurable, default 60)
+* ✔️ Fix running at the incorrect speed in higher refresh rate monitors by implementing an FPS limiter (configurable, default 60)
+* 🏁 Fix grey health disappearing when a single HP bar is lost
+  * This might not be a glitch. Instead, the glitch might be that when you lose the exact amount of a single bar of HP, grey health is not lost (thanks Hexer)
+* 🏁 Input system seems to be janky on keybord, particularly related to diagonal inputs
+* 🏁 Fix not being able to bind to R2/L2
+* 🏁 Fix controller hotplug
 
 ### Debug menu
 * ✔️ Character health (read + write)
