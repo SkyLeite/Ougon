@@ -16,6 +16,8 @@ The following is a list of my goals with this mod, in no particular order. Some 
 * ✔️ ImGui-based in-game overlay
 * 🏁 Load move data from a file, allowing users to create and share modifications for rebalancing
 * 🏁 Add video settings in-game
+* 🏁 Port 2.31's netcode to Steam, or at least improve it
+  * Not sure how they differ yet
 
 ### Bugfixes
 * ✔️ Fix running at the incorrect speed in higher refresh rate monitors by implementing an FPS limiter (configurable, default 60)
@@ -24,6 +26,9 @@ The following is a list of my goals with this mod, in no particular order. Some 
 * 🏁 Input system seems to be janky on keybord, particularly related to diagonal inputs
 * 🏁 Fix not being able to bind to R2/L2
 * 🏁 Fix controller hotplug
+* 🏁 Fix training mode reset erasing recorded inputs for the dummy
+* 🏁 Fix fullscreen not working in some setups
+  * Particularly Hexer's, with an RTX2060. No idea why this could be happening, will need more debug information
 
 ### Debug menu
 * ✔️ Character health (read + write)
