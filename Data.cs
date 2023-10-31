@@ -43,11 +43,32 @@ namespace Ougon
         [FieldOffset(0x0)]
         public short team;
 
+        // Very possibly an array somehow?
+        [FieldOffset(0xC)]
+        public Move* currentMove;
+
         [FieldOffset(0x144)]
         public CharacterInMatch* inMatch;
 
         [FieldOffset(0x10)]
         public Game* game;
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
+    public unsafe struct Move
+    {
+        // These offsets only work for Battler's c.5A for some reason
+        [FieldOffset(0x3cc)]
+        public byte damage;
+
+        [FieldOffset(0x3cd)]
+        public byte knockbackType;
+
+        [FieldOffset(0x3ce)]
+        public byte prop3;
+
+        [FieldOffset(0x3cf)]
+        public byte hitEffect;
     }
 
     [StructLayout(LayoutKind.Explicit)]
