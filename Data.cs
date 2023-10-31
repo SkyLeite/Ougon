@@ -77,6 +77,10 @@ namespace Ougon
         [FieldOffset(0x41c)]
         public int health;
 
+        // When over 1, the next knockdown stuns
+        [FieldOffset(0x40c)]
+        public float stun;
+
         [FieldOffset(0x420)]
         public float meter;
 

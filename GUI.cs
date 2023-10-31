@@ -64,8 +64,10 @@ namespace Ougon.GUI
                     ImGuiNET.ImGui.Text($"C2 Address: {new IntPtr(_context.match->p1Character2).ToString("x")}");
                     ImGuiNET.ImGui.InputInt("Character 1 Health##1", ref _context.match->p1Character1->inMatch->health);
                     ImGuiNET.ImGui.InputFloat("Character 1 Meter##1", ref _context.match->p1Character1->inMatch->meter);
+                    ImGuiNET.ImGui.InputFloat("Character 1 Stun##1", ref _context.match->p1Character1->inMatch->stun);
                     ImGuiNET.ImGui.InputInt("Character 2 Health##1", ref _context.match->p1Character2->inMatch->health);
                     ImGuiNET.ImGui.InputFloat("Character 2 Meter##1", ref _context.match->p1Character2->inMatch->meter);
+                    ImGuiNET.ImGui.InputFloat("Character 2 Stun##1", ref _context.match->p1Character2->inMatch->stun);
                     ImGuiNET.ImGui.EndGroup();
                 }
 
@@ -76,8 +78,10 @@ namespace Ougon.GUI
                     ImGuiNET.ImGui.Text($"C2 Address: {new IntPtr(_context.match->p2Character2).ToString("x")}");
                     ImGuiNET.ImGui.InputInt("Character 1 Health##2", ref _context.match->p2Character1->inMatch->health);
                     ImGuiNET.ImGui.InputFloat("Character 1 Meter##2", ref _context.match->p2Character1->inMatch->meter);
+                    ImGuiNET.ImGui.InputFloat("Character 1 Stun##2", ref _context.match->p2Character1->inMatch->stun);
                     ImGuiNET.ImGui.InputInt("Character 2 Health##2", ref _context.match->p2Character2->inMatch->health);
                     ImGuiNET.ImGui.InputFloat("Character 2 Meter##2", ref _context.match->p2Character2->inMatch->meter);
+                    ImGuiNET.ImGui.InputFloat("Character 2 Stun##2", ref _context.match->p2Character2->inMatch->stun);
                     ImGuiNET.ImGui.EndGroup();
                 }
             }
