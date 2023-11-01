@@ -34,6 +34,7 @@ The following is a list of my goals with this mod, in no particular order. Some 
 * ✔️ Character health (read + write)
 * ✔️ Character meter (read + write)
 * ✔️ Character stun value (read + write)
+* 🏁 Character grey health
 * 🏁 Character X and Y position (read + write)
 * 🏁 Character name
 * 🏁 Character move visualizer
