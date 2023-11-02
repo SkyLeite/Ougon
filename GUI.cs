@@ -1,6 +1,7 @@
 using Reloaded.Hooks.Definitions;
 using Reloaded.Imgui.Hook;
 using Reloaded.Imgui.Hook.Implementations;
+using Reloaded.Mod.Interfaces;
 
 namespace Ougon.GUI
 {
@@ -38,11 +39,7 @@ namespace Ougon.GUI
             ImGuiNET.ImGui.Begin("Debug");
             ImGuiNET.ImGui.Text($"FPS: {_gameState->fps.ToString("0.##")}");
 
-            if (_context.match == null)
-            {
-                ImGuiNET.ImGui.Text($"Not currently in a match");
-            }
-            else
+            if (_context.match != null && _context.match->isValid())
             {
                 ImGuiNET.ImGui.Text("Match");
                 ImGuiNET.ImGui.SameLine();

@@ -27,6 +27,13 @@ namespace Ougon
 
         [FieldOffset(0xb88)]
         public int timer;
+
+        [FieldOffset(0xb64)]
+        public bool isPaused;
+
+        public bool isValid() {
+            return this.p1Character1 != null && this.p1Character2 != null && this.p2Character1 != null && this.p2Character2 != null;
+        }
     }
 
     [StructLayout(LayoutKind.Explicit)]
