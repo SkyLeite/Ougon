@@ -16,6 +16,6 @@
   "IsUniversalMod": false,
   "ModDependencies": [ "reloaded.sharedlib.hooks" ],
   "OptionalDependencies": [],
-  "SupportedAppId": ["ougon"],
+  "SupportedAppId": ["ougon.exe"],
   "ProjectUrl": ""
 }
