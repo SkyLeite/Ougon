@@ -17,5 +17,5 @@
   "ModDependencies": [ "reloaded.sharedlib.hooks" ],
   "OptionalDependencies": [],
   "SupportedAppId": ["ougon.exe"],
-  "ProjectUrl": ""
+  "ProjectUrl": "https://github.com/SkyLeite/Ougon"
 }
