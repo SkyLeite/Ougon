@@ -2,6 +2,28 @@
 
 A mod for the Steam version of Umineko: Golden Fantasia (also known as Ougon Musou Kyoku).
 
+## Installing
+
+1. Download the Reloaded-II Modding tool from [this link](https://github.com/Reloaded-Project/Reloaded-II/releases/latest) by clicking `Setup.exe` and running it
+2. In the application's main window, click the little plus sigh on the left to add an application
+
+![image](https://github.com/SkyLeite/Ougon/assets/16887983/a7f7dd6b-2ca3-4c5c-bfd7-d1bef1ed402d)
+
+3. Navigate to Umineko: Golden Fantasia's directory (usually `C:/Program Files (x86)/Steam/steamapps/common/Umineko Golden Fantasia`) and select the file `Ougon.exe`
+
+![image](https://github.com/SkyLeite/Ougon/assets/16887983/d27f86c6-8f70-4e43-a93a-45b610acb9d5)
+
+4. Click the first icon on the left sidebar that says Download Mods
+5. In the search bar, type `Ougon` and click the first result
+6. Click the `Download` button on the bottom right corner
+7. Once the download is finished, you should see yourself in the game's screen. If not, click Beatrice's face on the left sidebar.
+
+![image](https://github.com/SkyLeite/Ougon/assets/16887983/27c65f81-ec99-4070-a852-4f28f88e367a)
+
+8. If you see a minus (`-`) sign next to Ougon in the mods list, click it to make it a `+`
+9. You're done! Click `Launch Application` to play. Note: you will have to launch the game through Reloaded-II every time you want to play with the mod enabled
+
+
 ## Features
 
 The following is a list of my goals with this mod, in no particular order. Some of them might not even be possible, so don't hold your breath.
