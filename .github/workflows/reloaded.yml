@@ -46,6 +46,8 @@ jobs:
     defaults:
       run:
         shell: pwsh
+    permissions:
+      contents: write
     
     steps:
     - uses: actions/checkout@v2
