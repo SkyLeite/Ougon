@@ -34,6 +34,9 @@ namespace Ougon
         public bool isValid() {
             return this.p1Character1 != null && this.p1Character2 != null && this.p2Character1 != null && this.p2Character2 != null;
         }
+
+        public Character*[] player1Characters() => new Character*[] { this.p1Character1, this.p1Character2 };
+        public Character*[] player2Characters() => new Character*[] { this.p2Character1, this.p2Character2 };
     }
 
     [StructLayout(LayoutKind.Explicit)]

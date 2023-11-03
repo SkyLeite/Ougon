@@ -2,17 +2,6 @@
   "version": 1,
   "dependencies": {
     "net7.0-windows7.0": {
-      "ImGui.NET.DirectX": {
-        "type": "Direct",
-        "requested": "[1.75.1, )",
-        "resolved": "1.75.1",
-        "contentHash": "ok6e2CmVGEknyN0B4EG6aDbNM12DWhOY2QY6NQBJXCslZZ3EUHLgSC1UZzX65zzes/V/Atysuz4CpVuSdWosgw==",
-        "dependencies": {
-          "System.Buffers": "4.4.0",
-          "System.Numerics.Vectors": "4.4.0",
-          "System.Runtime.CompilerServices.Unsafe": "4.4.0"
-        }
-      },
       "Reloaded.Imgui.Hook": {
         "type": "Direct",
         "requested": "[4.0.1, )",
@@ -284,8 +273,15 @@
       },
       "System.Buffers": {
         "type": "Transitive",
-        "resolved": "4.4.0",
-        "contentHash": "AwarXzzoDwX6BgrhjoJsk6tUezZEozOT5Y9QKF94Gl4JK91I4PIIBkBco9068Y9/Dra8Dkbie99kXB8+1BaYKw=="
+        "resolved": "4.3.0",
+        "contentHash": "ratu44uTIHgeBeI0dE8DWvmXVBSo4u7ozRZZHOMmK/JPpYyo0dAfgSiHlpiObMQ5lEtEyIXA40sKRYg5J6A8uQ==",
+        "dependencies": {
+          "System.Diagnostics.Debug": "4.3.0",
+          "System.Diagnostics.Tracing": "4.3.0",
+          "System.Resources.ResourceManager": "4.3.0",
+          "System.Runtime": "4.3.0",
+          "System.Threading": "4.3.0"
+        }
       },
       "System.Collections": {
         "type": "Transitive",
@@ -568,11 +564,6 @@
           "System.Threading.Tasks": "4.3.0"
         }
       },
-      "System.Numerics.Vectors": {
-        "type": "Transitive",
-        "resolved": "4.4.0",
-        "contentHash": "UiLzLW+Lw6HLed1Hcg+8jSRttrbuXv7DANVj0DkL9g6EnnzbL75EB7EWsw5uRbhxd/4YdG8li5XizGWepmG3PQ=="
-      },
       "System.ObjectModel": {
         "type": "Transitive",
         "resolved": "4.3.0",
@@ -680,11 +671,6 @@
           "Microsoft.NETCore.Platforms": "1.1.0",
           "Microsoft.NETCore.Targets": "1.1.0"
         }
-      },
-      "System.Runtime.CompilerServices.Unsafe": {
-        "type": "Transitive",
-        "resolved": "4.4.0",
-        "contentHash": "9dLLuBxr5GNmOfl2jSMcsHuteEg32BEfUotmmUkmZjpR3RpVHE8YQwt0ow3p6prwA1ME8WqDVZqrr8z6H8G+Kw=="
       },
       "System.Runtime.Extensions": {
         "type": "Transitive",

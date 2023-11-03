@@ -6,7 +6,6 @@ using System.Diagnostics;
 using Reloaded.Hooks.Definitions.X86;
 using Reloaded.Hooks.Definitions;
 using Reloaded.Memory.Sigscan;
-using ImGuiNET;
 
 namespace Ougon
 {
@@ -156,12 +155,6 @@ namespace Ougon
         {
             base.Resume();
             _renderHook.Enable();
-        }
-
-
-        private void RenderTestWindow()
-        {
-            ImGui.ShowDemoWindow();
         }
 
 

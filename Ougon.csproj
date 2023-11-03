@@ -44,7 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ImGui.NET.DirectX" Version="1.75.1" />
     <PackageReference Include="Reloaded.Imgui.Hook" Version="4.0.1" />
     <PackageReference Include="Reloaded.Imgui.Hook.Direct3D9" Version="1.0.2" />
     <PackageReference Include="Reloaded.Memory" Version="9.1.0" />

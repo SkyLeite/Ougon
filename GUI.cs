@@ -2,6 +2,7 @@ using Reloaded.Hooks.Definitions;
 using Reloaded.Imgui.Hook;
 using Reloaded.Imgui.Hook.Implementations;
 using Reloaded.Mod.Interfaces;
+using DearImguiSharp;
 
 namespace Ougon.GUI
 {
@@ -34,56 +35,63 @@ namespace Ougon.GUI
             }).ConfigureAwait(false);
         }
 
+        private unsafe void RenderPlayer(int playerIndex, Character*[] characters)
+        {
+                ImGui.SetNextItemOpen(true, (int)ImGuiCond.Once);
+                if (ImGui.TreeNodePtr(playerIndex, $"Player {playerIndex.ToString()}"))
+                {
+                    int i = 0;
+                    foreach (Character* character in characters) {
+                        ImGui.SetNextItemOpen(true, (int)ImGuiCond.Once);
+                        if (ImGui.TreeNodePtr(i, $"Character {i + 1}")) {
+                            ImGui.Text($"Address: {new IntPtr(character).ToString("x")}");
+                            ImGui.InputInt($"Health##{playerIndex}-{i}", ref character->inMatch->health, 0, 1, 0);
+                            ImGui.InputFloat($"Meter##{playerIndex}-{i}", ref character->inMatch->meter, 0.0f, 0.0f, "%.3f", 0);
+                            ImGui.InputFloat($"Stun##{playerIndex}-{i}", ref character->inMatch->stun, 0.0f, 0.0f, "%.3f", 0);
+
+                            ImGui.TreePop();
+                        }
+
+                        i = i + 1;
+                    }
+
+                    ImGui.TreePop();
+                }
+        }
+
         private unsafe void RenderDebugWindow()
         {
-            ImGuiNET.ImGui.Begin("Debug");
-            ImGuiNET.ImGui.Text($"FPS: {_gameState->fps.ToString("0.##")}");
+            bool isDefaultOpen = true;
+            ImGui.Begin("Debug", ref isDefaultOpen, 0);
+
+            if (ImGui.CollapsingHeaderBoolPtr("General", ref isDefaultOpen, 0)) {
+                ImGui.Text($"FPS: {_gameState->fps.ToString("0.##")}");
+            }
 
             if (_context.match != null && _context.match->isValid())
             {
-                ImGuiNET.ImGui.Text("Match");
-                ImGuiNET.ImGui.SameLine();
-                ImGuiNET.ImGui.Text($"Address: {new IntPtr(_context.match).ToString("x")}");
-
+                if (ImGui.CollapsingHeaderBoolPtr("Current Match", ref isDefaultOpen, 0))
                 {
-                    ImGuiNET.ImGui.BeginGroup();
-                    ImGuiNET.ImGui.SliderInt("Timer", ref _context.match->timer, 0, 10800);
-                    ImGuiNET.ImGui.SameLine();
-                    ImGuiNET.ImGui.Checkbox("Lock", ref _context.timerLocked);
-                    ImGuiNET.ImGui.EndGroup();
-                }
+                    ImGui.Text($"Match Address: {new IntPtr(_context.match).ToString("x")}");
+
+                    {
+                        ImGui.BeginGroup();
+                        ImGui.SliderInt("Timer", ref _context.match->timer, 0, 10800, "", 0);
+                        ImGui.SameLine(0, 0);
+                        ImGui.Checkbox("Lock", ref _context.timerLocked);
+                        ImGui.EndGroup();
+                    }
 
 
-                ImGuiNET.ImGui.Text("Player 1");
-                {
-                    ImGuiNET.ImGui.BeginGroup();
-                    ImGuiNET.ImGui.Text($"C1 Address: {new IntPtr(_context.match->p1Character1).ToString("x")}");
-                    ImGuiNET.ImGui.Text($"C2 Address: {new IntPtr(_context.match->p1Character2).ToString("x")}");
-                    ImGuiNET.ImGui.InputInt("Character 1 Health##1", ref _context.match->p1Character1->inMatch->health);
-                    ImGuiNET.ImGui.InputFloat("Character 1 Meter##1", ref _context.match->p1Character1->inMatch->meter);
-                    ImGuiNET.ImGui.InputFloat("Character 1 Stun##1", ref _context.match->p1Character1->inMatch->stun);
-                    ImGuiNET.ImGui.InputInt("Character 2 Health##1", ref _context.match->p1Character2->inMatch->health);
-                    ImGuiNET.ImGui.InputFloat("Character 2 Meter##1", ref _context.match->p1Character2->inMatch->meter);
-                    ImGuiNET.ImGui.InputFloat("Character 2 Stun##1", ref _context.match->p1Character2->inMatch->stun);
-                    ImGuiNET.ImGui.EndGroup();
-                }
+                    ImGui.Separator();
 
-                ImGuiNET.ImGui.Text("Player 2");
-                {
-                    ImGuiNET.ImGui.BeginGroup();
-                    ImGuiNET.ImGui.Text($"C1 Address: {new IntPtr(_context.match->p2Character1).ToString("x")}");
-                    ImGuiNET.ImGui.Text($"C2 Address: {new IntPtr(_context.match->p2Character2).ToString("x")}");
-                    ImGuiNET.ImGui.InputInt("Character 1 Health##2", ref _context.match->p2Character1->inMatch->health);
-                    ImGuiNET.ImGui.InputFloat("Character 1 Meter##2", ref _context.match->p2Character1->inMatch->meter);
-                    ImGuiNET.ImGui.InputFloat("Character 1 Stun##2", ref _context.match->p2Character1->inMatch->stun);
-                    ImGuiNET.ImGui.InputInt("Character 2 Health##2", ref _context.match->p2Character2->inMatch->health);
-                    ImGuiNET.ImGui.InputFloat("Character 2 Meter##2", ref _context.match->p2Character2->inMatch->meter);
-                    ImGuiNET.ImGui.InputFloat("Character 2 Stun##2", ref _context.match->p2Character2->inMatch->stun);
-                    ImGuiNET.ImGui.EndGroup();
+                    RenderPlayer(1, _context.match->player1Characters());
+                    ImGui.Separator();
+                    RenderPlayer(2, _context.match->player2Characters());
                 }
             }
 
-            ImGuiNET.ImGui.End();
+            ImGui.End();
         }
     }
 }
