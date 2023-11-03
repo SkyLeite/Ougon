@@ -64,6 +64,11 @@ namespace Ougon.GUI
             bool isDefaultOpen = true;
             ImGui.Begin("Debug", ref isDefaultOpen, 0);
 
+            var defaultWindowSize = new ImVec2();
+            defaultWindowSize.X = 300;
+            defaultWindowSize.Y = 400;
+            ImGui.SetWindowSizeVec2(defaultWindowSize, (int)ImGuiCond.FirstUseEver);
+
             if (ImGui.CollapsingHeaderBoolPtr("General", ref isDefaultOpen, 0)) {
                 ImGui.Text($"FPS: {_gameState->fps.ToString("0.##")}");
             }
