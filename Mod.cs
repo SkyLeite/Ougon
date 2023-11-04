@@ -47,6 +47,10 @@ namespace Ougon
 
         private unsafe GameState* _gameState;
 
+        [Function(CallingConventions.Fastcall)]
+        public unsafe delegate void LoadMoves(bool *character);
+        private IHook<LoadMoves> _loadMovesHook;
+
         [Function(CallingConventions.Stdcall)]
         public delegate void Render();
         private IHook<Render> _renderHook;
@@ -56,7 +60,7 @@ namespace Ougon
         private IHook<EndScene> _endSceneHook;
 
         [Function(CallingConventions.Cdecl)]
-        public unsafe delegate void LoadCharacters(ushort* param_1, void* param_2, int* param_3);
+        public unsafe delegate void LoadCharacters(byte* param_1, void* param_2, int* param_3);
         private IHook<LoadCharacters> _loadCharactersHook;
 
         [Function(CallingConventions.Cdecl)]
@@ -90,17 +94,29 @@ namespace Ougon
             _calculateHealthHook.OriginalFunction(_this, attackType);
         }
 
-        public unsafe void MyLoadCharacters(ushort* param_1, void* param_2, int* param_3)
+        public unsafe void MyLoadCharacters(byte* param_1, void* param_2, int* param_3)
         {
             var p = new IntPtr(param_2);
-            _logger.WriteLineAsync($"[MyLoadCharacters] param_2 address: {new IntPtr(param_2).ToString("x")} | param_3: {*param_3}");
+            _logger.WriteLineAsync($"[MyLoadCharacters] param1: {new IntPtr(param_1).ToString("x")} | param_2 address: {new IntPtr(param_2).ToString("x")} | param_3: {*param_3}");
 
-            var base_addr = param_1 + 0x20;
+            var char1Pointer = param_1 + 0x40;
 
-            _logger.WriteLineAsync($"[MyLoadCharacters] base_addr: {*(base_addr)}");
-            _logger.WriteLineAsync($"[MyLoadCharacters] base_addr + 1: {*(base_addr + 1)}");
-            _logger.WriteLineAsync($"[MyLoadCharacters] base_addr + 2: {*(base_addr + 2)}");
-            _logger.WriteLineAsync($"[MyLoadCharacters] base_addr + 1: {*(base_addr + 3)}");
+            // ushort[] characters = new[] { *char1Pointer, *(char1Pointer + 1), *(char1Pointer + 2), *(char1Pointer + 3) };
+
+            var characters = new List<Character> {};
+
+            for (int i = 0; i < 4; i++) {
+                var characterPointer = char1Pointer + (i * 2);
+                var characterID = *characterPointer;
+                var characterColor = *(characterPointer + 1);
+
+                characters.Add(Character.fromID(characterID, characterColor));
+            }
+
+            var player1 = new Player(new List<Character> { characters[0], characters[2] });
+            var player2 = new Player(new List<Character> { characters[1], characters[3] });
+            this._context.fight = new Fight(player1, player2);
+
             _loadCharactersHook.OriginalFunction(param_1, param_2, param_3);
         }
 

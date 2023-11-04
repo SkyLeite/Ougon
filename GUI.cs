@@ -35,15 +35,25 @@ namespace Ougon.GUI
             }).ConfigureAwait(false);
         }
 
-        private unsafe void RenderPlayer(int playerIndex, Character*[] characters)
+        private unsafe void RenderPlayer(int playerIndex, GameCharacter*[] characters)
         {
+                var player = playerIndex switch {
+                    1 => _context.fight?.player1,
+                    2 => _context.fight?.player2,
+                    _ => null
+                };
+
                 ImGui.SetNextItemOpen(true, (int)ImGuiCond.Once);
                 if (ImGui.TreeNodePtr(playerIndex, $"Player {playerIndex.ToString()}"))
                 {
                     int i = 0;
-                    foreach (Character* character in characters) {
+                    foreach (GameCharacter* character in characters) {
                         ImGui.SetNextItemOpen(true, (int)ImGuiCond.Once);
-                        if (ImGui.TreeNodePtr(i, $"Character {i + 1}")) {
+
+                        var name = player == null ? "Character" : player.characters[i].name;
+                        var color = player == null ? 0 : player.characters[i].color;
+
+                        if (ImGui.TreeNodePtr(i, $"{name} ({color})")) {
                             ImGui.Text($"Address: {new IntPtr(character).ToString("x")}");
                             ImGui.InputInt($"Health##{playerIndex}-{i}", ref character->inMatch->health, 0, 1, 0);
                             ImGui.InputFloat($"Meter##{playerIndex}-{i}", ref character->inMatch->meter, 0.0f, 0.0f, "%.3f", 0);

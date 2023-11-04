@@ -2,28 +2,20 @@ using System.Runtime.InteropServices;
 
 namespace Ougon
 {
-    public enum Characters
-    {
-        Rosa = 12,
-        Willard = 6,
-        Ronove = 15,
-        Virgilia = 8
-    }
-
     [StructLayout(LayoutKind.Explicit)]
     public unsafe struct Match
     {
         [FieldOffset(0x1c)]
-        public Character* p1Character1;
+        public GameCharacter* p1Character1;
 
         [FieldOffset(0x24)]
-        public Character* p1Character2;
+        public GameCharacter* p1Character2;
 
         [FieldOffset(0x20)]
-        public Character* p2Character1;
+        public GameCharacter* p2Character1;
 
         [FieldOffset(0x28)]
-        public Character* p2Character2;
+        public GameCharacter* p2Character2;
 
         [FieldOffset(0xb88)]
         public int timer;
@@ -35,19 +27,19 @@ namespace Ougon
             return this.p1Character1 != null && this.p1Character2 != null && this.p2Character1 != null && this.p2Character2 != null;
         }
 
-        public Character*[] player1Characters() => new Character*[] { this.p1Character1, this.p1Character2 };
-        public Character*[] player2Characters() => new Character*[] { this.p2Character1, this.p2Character2 };
+        public GameCharacter*[] player1Characters() => new GameCharacter*[] { this.p1Character1, this.p1Character2 };
+        public GameCharacter*[] player2Characters() => new GameCharacter*[] { this.p2Character1, this.p2Character2 };
     }
 
     [StructLayout(LayoutKind.Explicit)]
     public unsafe struct Something
     {
         [FieldOffset(0x2a604)]
-        public Character* character;
+        public GameCharacter* character;
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    public unsafe struct Character
+    public unsafe struct GameCharacter
     {
         // Pointer to a team
         [FieldOffset(0x0)]
@@ -58,7 +50,7 @@ namespace Ougon
         public Move* currentMove;
 
         [FieldOffset(0x144)]
-        public CharacterInMatch* inMatch;
+        public GameCharacterInMatch* inMatch;
 
         [FieldOffset(0x10)]
         public Game* game;
@@ -82,7 +74,7 @@ namespace Ougon
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    public unsafe struct CharacterInMatch
+    public unsafe struct GameCharacterInMatch
     {
         [FieldOffset(0x41c)]
         public int health;
