@@ -59,6 +59,9 @@ namespace Ougon.GUI
                             ImGui.InputFloat($"Meter##{playerIndex}-{i}", ref character->inMatch->meter, 0.0f, 0.0f, "%.3f", 0);
                             ImGui.InputFloat($"Stun##{playerIndex}-{i}", ref character->inMatch->stun, 0.0f, 0.0f, "%.3f", 0);
 
+                            ImGui.InputFloat($"Position X##{playerIndex}-{i}", ref character->inMatch->positionX, 0.0f, 0.0f, "%.3f", 0);
+                            ImGui.InputFloat($"Position Y##{playerIndex}-{i}", ref character->inMatch->positionY, 0.0f, 0.0f, "%.3f", 0);
+
                             ImGui.TreePop();
                         }
 

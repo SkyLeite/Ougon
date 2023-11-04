@@ -87,10 +87,10 @@ namespace Ougon
         public float meter;
 
         [FieldOffset(0x3d0)]
-        public short positionX;
+        public float positionX;
 
         [FieldOffset(0x3d4)]
-        public short positionY;
+        public float positionY;
     }
 
     [StructLayout(LayoutKind.Explicit)]
