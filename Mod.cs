@@ -176,7 +176,6 @@ namespace Ougon
 
         unsafe public Mod(ModContext context)
         {
-
             _modLoader = context.ModLoader;
             _hooks = context.Hooks;
             _logger = context.Logger;
@@ -185,6 +184,13 @@ namespace Ougon
             _modConfig = context.ModConfig;
             _context = new Context();
             this.FrameInterval = 1000.0 / _configuration.FPSLimit;
+
+            byte[]? data;
+            uint dataSize;
+            _logger.WriteLine($"{OugonPack.LoadAndDecomp("00.ANZ", "/mnt/hdd/projects/Ougon/OugonTest", out data, out dataSize)}");
+            _logger.WriteLine($"{OugonPack.LoadAndDecomp("00.DDZ", "/mnt/hdd/projects/Ougon/OugonTest", out data, out dataSize)}");
+            _logger.WriteLine($"{OugonPack.LoadAndDecomp("00.LZR", "/mnt/hdd/projects/Ougon/OugonTest", out data, out dataSize)}");
+            _logger.WriteLine($"{OugonPack.LoadAndDecomp("00.SE", "/mnt/hdd/projects/Ougon/OugonTest", out data, out dataSize)}");
 
             var thisProcess = Process.GetCurrentProcess();
             if (thisProcess.MainModule == null)
