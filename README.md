@@ -69,6 +69,7 @@ The following is a list of my goals with this mod, in no particular order. Some 
 * 🏁 Combo scaling visualizer
 * 🏁 Change characters in real time
 * 🏁 Change character palette in real time
+* 🏁 Accessibility / training tool where attacks play specific sounds for easier practice of timing
 
 ### Online
 * 🏁 Set delay and rollback cooldown on the fly
