@@ -46,7 +46,7 @@ namespace Ougon
         public short team;
 
         [FieldOffset(0xC)]
-        public Frame* currentAnimationFrame;
+        public Sequence* currentSequence;
 
         [FieldOffset(0x144)]
         public GameCharacterInMatch* inMatch;

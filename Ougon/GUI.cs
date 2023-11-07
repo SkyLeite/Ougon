@@ -44,16 +44,21 @@ namespace Ougon.GUI
                 };
 
                 ImGui.SetNextItemOpen(true, (int)ImGuiCond.Once);
-                if (ImGui.TreeNodePtr(playerIndex, $"Player {playerIndex.ToString()}"))
+                if (ImGui.TreeNodeStr($"Player {playerIndex}"))
                 {
                     int i = 0;
                     foreach (GameCharacter* character in characters) {
                         ImGui.SetNextItemOpen(true, (int)ImGuiCond.Once);
 
-                        var name = player == null ? "Character" : player.characters[i].name;
-                        var color = player == null ? 0 : player.characters[i].color;
+                        var _character = player.characters[i];
+                        var id = _character.id;
+                        var name = _character.name;
+                        var color = _character.color;
 
-                        if (ImGui.TreeNodePtr(i, $"{name} ({color})")) {
+                        _character.AddToSequenceHistory((nint)character->currentSequence);
+                        // _character.sequenceHistory.Add($"0x{new IntPtr(character->currentSequence).ToString("x").ToUpper()}");
+
+                        if (ImGui.TreeNodeStr($"{name} ({color})")) {
                             RenderPointer("", character);
                             ImGui.InputInt($"Health##{playerIndex}-{i}", ref character->inMatch->health, 0, 1, 0);
                             ImGui.InputFloat($"Meter##{playerIndex}-{i}", ref character->inMatch->meter, 0.0f, 0.0f, "%.3f", 0);
@@ -62,7 +67,7 @@ namespace Ougon.GUI
                             ImGui.InputFloat($"Position X##{playerIndex}-{i}", ref character->inMatch->positionX, 0.0f, 0.0f, "%.3f", 0);
                             ImGui.InputFloat($"Position Y##{playerIndex}-{i}", ref character->inMatch->positionY, 0.0f, 0.0f, "%.3f", 0);
 
-                            if (ImGui.TreeNodePtr(1, "Moves"))
+                            if (ImGui.TreeNodeStr("Moves"))
                             {
                                 RenderSequence("Idle", playerIndex, 1, character->_5);
 
@@ -125,6 +130,27 @@ namespace Ougon.GUI
 
                                     ImGui.TreePop();
                                 }
+
+                                ImGui.TreePop();
+                            }
+
+                            if (ImGui.TreeNodeStr("Animation history")) {
+                                var buttonSize = new ImVec2();
+                                buttonSize.X = 100;
+                                buttonSize.Y = 20;
+                                if (ImGui.Button("Clear", buttonSize)) {
+                                    _character.ClearSequenceHistory();
+                                }
+
+                                ImVec2 available = new ImVec2();
+                                ImGui.GetContentRegionAvail(available);
+                                available.Y = 100;
+
+                                ImGui.BeginChildStr($"AnimationHistory#{name}{color}{i}", available, true, (int)ImGuiWindowFlags.HorizontalScrollbar);
+                                foreach (var sequence in _character.sequenceHistory) {
+                                    ImGui.Text(sequence);
+                                }
+                                ImGui.EndChild();
 
                                 ImGui.TreePop();
                             }

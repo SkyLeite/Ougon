@@ -1,11 +1,22 @@
 namespace Ougon {
   public class Character {
+    public byte id { get; set; }
     public string name { get; set; }
     public byte color { get; set; }
+    public HashSet<string> sequenceHistory { get; set; } = new HashSet<string>();
 
-    public Character(string name, byte color) {
+    public Character(byte id, string name, byte color) {
+        this.id = id;
         this.name = name;
         this.color = color;
+    }
+
+    public void AddToSequenceHistory(IntPtr sequencePtr) {
+        this.sequenceHistory.Add($"0x{sequencePtr.ToString("x")}");
+    }
+
+    public void ClearSequenceHistory() {
+        this.sequenceHistory.Clear();
     }
 
     public static Character fromID(byte id, byte color) {
@@ -31,7 +42,7 @@ namespace Ougon {
             _ => id.ToString()
         };
 
-        return new Character(name, color);
+        return new Character(id, name, color);
     }
   }
 }

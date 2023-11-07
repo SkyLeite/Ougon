@@ -8,5 +8,10 @@ namespace Ougon {
         this.player1 = player1;
         this.player2 = player2;
     }
+
+    public Character FindCharacter(byte id, byte color) {
+        var characters = player1.characters.Concat(player2.characters);
+        return characters.FirstOrDefault(character => character.id == id && character.color == color, null);
+    }
   }
 }
