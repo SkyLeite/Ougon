@@ -16,6 +16,7 @@ namespace Ougon {
             3 => "Kanon",
             4 => "Lucifer",
             5 => "Chiester 410",
+            6 => "Ronove",
             7 => "EVA Beatrice",
             8 => "Virgilia",
             9 => "Beatrice",
