@@ -162,7 +162,7 @@ param (
     $UseScriptDirectory=$True,
 
     ## => User Config <= ## 
-    $ProjectPath = "Ougon.csproj",
+    $ProjectPath = "Ougon/Ougon.csproj",
     $PackageName = "Ougon",
     $PublishOutputDir = "Publish/ToUpload",
 
