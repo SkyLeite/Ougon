@@ -72,23 +72,23 @@ namespace Ougon
         [FieldOffset(0x538)]
         public Sequence* _2to5;
 
-        [FieldOffset(0x53C)]
+        [FieldOffset(0x540)]
         public Sequence* _6;
 
-        [FieldOffset(0x540)]
+        [FieldOffset(0x544)]
         public Sequence* _4;
 
-        [FieldOffset(0x544)]
+        [FieldOffset(0x548)]
         public Sequence* _8;
 
-        [FieldOffset(0x548)]
+        [FieldOffset(0x54C)]
         public Sequence* _9;
 
         [FieldOffset(0x54C)]
         public Sequence* _7;
 
         [FieldOffset(0x570)]
-        public Sequence* _66;
+        public Sequence* _66to5;
 
         [FieldOffset(0x574)]
         public Sequence* _44;
@@ -149,21 +149,6 @@ namespace Ougon
 
         [FieldOffset(0x668)]
         public Sequence* j2C;
-
-        [FieldOffset(0x6FC)]
-        public Sequence* grab;
-
-        [FieldOffset(0x6FE)]
-        public Sequence* grabWhiff;
-
-        [FieldOffset(0x740)]
-        public Sequence* dizzy;
-
-        [FieldOffset(0x744)]
-        public Sequence* appeal;
-
-        [FieldOffset(0x78C)]
-        public Sequence* attackTouch;
 
         public static Sequence*[] GetSequences(GameCharacter* character) {
             var length = 248;

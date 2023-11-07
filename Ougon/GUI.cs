@@ -81,7 +81,7 @@ namespace Ougon.GUI
                                 RenderSequence("Forward jump", playerIndex, 10, character->_9);
                                 RenderSequence("Backward jump", playerIndex, 11, character->_7);
 
-                                RenderSequence("Dash", playerIndex, 12, character->_66);
+                                RenderSequence("Dash recovery", playerIndex, 12, character->_66to5);
                                 RenderSequence("Backdash", playerIndex, 13, character->_44);
 
                                 if (ImGui.TreeNodePtr(14, "A")) {
@@ -115,12 +115,6 @@ namespace Ougon.GUI
 
                                     ImGui.TreePop();
                                 }
-
-                                RenderSequence("Grab", playerIndex, 17, character->grab);
-                                RenderSequence("Grab whiff", playerIndex, 18, character->grabWhiff);
-                                RenderSequence("Dizzy", playerIndex, 19, character->dizzy);
-                                RenderSequence("Appeal", playerIndex, 20, character->appeal);
-                                RenderSequence("Attack Touch", playerIndex, 21, character->attackTouch);
 
                                 if (ImGui.TreeNodePtr(17, "Unknown")) {
                                     int sequenceIndex = 0;
