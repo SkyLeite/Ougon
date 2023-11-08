@@ -43,13 +43,15 @@ namespace Ougon.GUI
                     _ => null
                 };
 
+                if (player == null) {
+                    return;
+                }
+
                 ImGui.SetNextItemOpen(true, (int)ImGuiCond.Once);
                 if (ImGui.TreeNodeStr($"Player {playerIndex}"))
                 {
                     int i = 0;
                     foreach (GameCharacter* character in characters) {
-                        ImGui.SetNextItemOpen(true, (int)ImGuiCond.Once);
-
                         var _character = player.characters[i];
                         var id = _character.id;
                         var name = _character.name;
@@ -57,6 +59,7 @@ namespace Ougon.GUI
 
                         _character.AddToSequenceHistory((nint)character->currentSequence);
 
+                        ImGui.SetNextItemOpen(true, (int)ImGuiCond.Once);
                         if (ImGui.TreeNodeStr($"{name} ({color})")) {
                             RenderPointer("", character);
                             ImGui.InputInt($"Health##{playerIndex}-{i}", ref character->inMatch->health, 0, 1, 0);
