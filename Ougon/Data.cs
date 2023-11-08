@@ -54,14 +54,17 @@ namespace Ougon
         [FieldOffset(0x10)]
         public Game* game;
 
+        [FieldOffset(0x520)]
+        public Sequence* idle;
+
         [FieldOffset(0x524)]
         public Sequence* _5;
 
         [FieldOffset(0x528)]
-        public Sequence* _6to4;
+        public Sequence* _5to2;
 
         [FieldOffset(0x52C)]
-        public Sequence* _5to2;
+        public Sequence* yawn;
 
         [FieldOffset(0x530)]
         public Sequence* _2;
@@ -86,6 +89,9 @@ namespace Ougon
 
         [FieldOffset(0x54C)]
         public Sequence* _7;
+
+        [FieldOffset(0x564)]
+        public Sequence* tagIn;
 
         [FieldOffset(0x570)]
         public Sequence* _66to5;
@@ -149,6 +155,75 @@ namespace Ougon
 
         [FieldOffset(0x668)]
         public Sequence* j2C;
+
+        [FieldOffset(0x6F4)]
+        public Sequence* grab;
+
+        [FieldOffset(0x6F8)]
+        public Sequence* grabWhiff;
+
+        [FieldOffset(0x674)]
+        public Sequence* callTag;
+
+        [FieldOffset(0x678)]
+        public Sequence* tagOut; // Battler's 236A
+
+        [FieldOffset(0x688)]
+        public Sequence* specialMove1A; // Battler's 236A
+
+        [FieldOffset(0x68C)]
+        public Sequence* specialMove1B; // Battler's 236B
+
+        [FieldOffset(0x690)]
+        public Sequence* specialMove1C; // Battler's 236C
+
+        [FieldOffset(0x694)]
+        public Sequence* specialMove1X; // Battler's 236AB
+
+        [FieldOffset(0x698)]
+        public Sequence* specialMove2A; // Battler's 623A
+
+        [FieldOffset(0x69C)]
+        public Sequence* specialMove2B; // Battler's 623B
+
+        [FieldOffset(0x6A0)]
+        public Sequence* specialMove2C; // Battler's 623C
+
+        [FieldOffset(0x6A4)]
+        public Sequence* specialMove2X; // Battler's 623AB
+
+        [FieldOffset(0x6A8)]
+        public Sequence* specialMove3A; // Battler's 214A
+
+        [FieldOffset(0x6AC)]
+        public Sequence* specialMove3B; // Battler's 214B
+
+        [FieldOffset(0x6B0)]
+        public Sequence* specialMove3C; // Battler's 214C
+
+        [FieldOffset(0x6B4)]
+        public Sequence* specialMove3X; // Battler's 214AB
+
+        [FieldOffset(0x6B8)]
+        public Sequence* specialMove4A; // Battler's j.214A
+
+        [FieldOffset(0x6BC)]
+        public Sequence* specialMove4B; // Battler's j.214B
+
+        [FieldOffset(0x6C0)]
+        public Sequence* specialMove4C; // Battler's j.214C
+
+        [FieldOffset(0x6C4)]
+        public Sequence* specialMove4X; // Battler's j.214AB
+
+        [FieldOffset(0x6D0)]
+        public Sequence* super2; // Battler's 236236C
+
+        [FieldOffset(0x6D4)]
+        public Sequence* metaSuper; // Battler's 236236C
+
+        [FieldOffset(0x780)]
+        public Sequence* metaDeclare;
 
         public static Sequence*[] GetSequences(GameCharacter* character) {
             var length = 248;

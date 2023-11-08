@@ -56,7 +56,6 @@ namespace Ougon.GUI
                         var color = _character.color;
 
                         _character.AddToSequenceHistory((nint)character->currentSequence);
-                        // _character.sequenceHistory.Add($"0x{new IntPtr(character->currentSequence).ToString("x").ToUpper()}");
 
                         if (ImGui.TreeNodeStr($"{name} ({color})")) {
                             RenderPointer("", character);
@@ -71,7 +70,6 @@ namespace Ougon.GUI
                             {
                                 RenderSequence("Idle", playerIndex, 1, character->_5);
 
-                                RenderSequence("6->4", playerIndex, 2, character->_6to4);
                                 RenderSequence("5->2", playerIndex, 3, character->_5to2);
 
                                 RenderSequence("Crouching", playerIndex, 4, character->_2);
@@ -89,7 +87,13 @@ namespace Ougon.GUI
                                 RenderSequence("Dash recovery", playerIndex, 12, character->_66to5);
                                 RenderSequence("Backdash", playerIndex, 13, character->_44);
 
-                                if (ImGui.TreeNodePtr(14, "A")) {
+                                RenderSequence("Grab", playerIndex, 14, character->grab);
+                                RenderSequence("Grab Whiff", playerIndex, 15, character->grabWhiff);
+
+                                RenderSequence("Call tag", playerIndex, 16, character->callTag);
+                                RenderSequence("Tag out", playerIndex, 17, character->tagOut);
+
+                                if (ImGui.TreeNodeStr("A")) {
                                     RenderSequence("Far 5A", playerIndex, 1, character->far5A);
                                     RenderSequence("Close 5A", playerIndex, 2, character->close5A);
                                     RenderSequence("2A", playerIndex, 3, character->_2A);
@@ -99,7 +103,7 @@ namespace Ougon.GUI
                                     ImGui.TreePop();
                                 }
 
-                                if (ImGui.TreeNodePtr(15, "B")) {
+                                if (ImGui.TreeNodeStr("B")) {
                                     RenderSequence("Far 5B", playerIndex, 1, character->far5B);
                                     RenderSequence("Close 5B", playerIndex, 2, character->close5B);
                                     RenderSequence("6B", playerIndex, 3, character->_6B);
@@ -110,7 +114,7 @@ namespace Ougon.GUI
                                     ImGui.TreePop();
                                 }
 
-                                if (ImGui.TreeNodePtr(16, "C")) {
+                                if (ImGui.TreeNodeStr("C")) {
                                     RenderSequence("Far 5C", playerIndex, 1, character->far5C);
                                     RenderSequence("Close 5C", playerIndex, 2, character->close5C);
                                     RenderSequence("6C", playerIndex, 3, character->_6C);
@@ -121,15 +125,45 @@ namespace Ougon.GUI
                                     ImGui.TreePop();
                                 }
 
-                                if (ImGui.TreeNodePtr(17, "Unknown")) {
-                                    int sequenceIndex = 0;
-                                    foreach (var sequence in GameCharacter.GetSequences(character)) {
-                                        RenderSequence($"Unknown 0x{new IntPtr(sequence).ToString("x")} {(0x524 + (0x4 * sequenceIndex)).ToString("x")}", playerIndex, sequenceIndex, sequence);
-                                        sequenceIndex += 1;
+                                if (ImGui.TreeNodeStr("Special Moves")) {
+                                    if (ImGui.TreeNodeStr("Special 1")) {
+                                        RenderSequence("A", playerIndex, 1, character->specialMove1A);
+                                        RenderSequence("B", playerIndex, 2, character->specialMove1B);
+                                        RenderSequence("C", playerIndex, 3, character->specialMove1C);
+                                        RenderSequence("EX", playerIndex, 4, character->specialMove1X);
+                                        ImGui.TreePop();
+                                    }
+
+                                    if (ImGui.TreeNodeStr("Special 2")) {
+                                        RenderSequence("A", playerIndex, 1, character->specialMove2A);
+                                        RenderSequence("B", playerIndex, 2, character->specialMove2B);
+                                        RenderSequence("C", playerIndex, 3, character->specialMove2C);
+                                        RenderSequence("EX", playerIndex, 4, character->specialMove2X);
+                                        ImGui.TreePop();
+                                    }
+
+                                    if (ImGui.TreeNodeStr("Special 3")) {
+                                        RenderSequence("A", playerIndex, 1, character->specialMove3A);
+                                        RenderSequence("B", playerIndex, 2, character->specialMove3B);
+                                        RenderSequence("C", playerIndex, 3, character->specialMove3C);
+                                        RenderSequence("EX", playerIndex, 4, character->specialMove3X);
+                                        ImGui.TreePop();
+                                    }
+
+                                    if (ImGui.TreeNodeStr("Special 4")) {
+                                        RenderSequence("A", playerIndex, 1, character->specialMove4A);
+                                        RenderSequence("B", playerIndex, 2, character->specialMove4B);
+                                        RenderSequence("C", playerIndex, 3, character->specialMove4C);
+                                        RenderSequence("EX", playerIndex, 4, character->specialMove4X);
+                                        ImGui.TreePop();
                                     }
 
                                     ImGui.TreePop();
                                 }
+
+                                RenderSequence("Level 2 Super", playerIndex, 18, character->super2);
+                                RenderSequence("Meta Declare", playerIndex, 19, character->metaDeclare);
+                                RenderSequence("Meta Super", playerIndex, 20, character->metaSuper);
 
                                 ImGui.TreePop();
                             }
@@ -178,7 +212,7 @@ namespace Ougon.GUI
 
         private static unsafe void RenderSequence(string name, int playerIndex, int i, Sequence* sequence)
         {
-            if (ImGui.TreeNodePtr(i, name))
+            if (ImGui.TreeNodeStr(name))
             {
                 RenderPointer("", sequence);
                 var frameI = 0;
