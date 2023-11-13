@@ -1,10 +1,11 @@
 using System.Runtime.InteropServices;
+using SharpDX.Direct3D9;
 
 namespace Ougon
 {
 
     [StructLayout(LayoutKind.Explicit)]
-    public struct GameState
+    public unsafe struct GameState
     {
         [FieldOffset(0x480)]
         public double fps;
@@ -20,5 +21,8 @@ namespace Ougon
 
         [FieldOffset(0x34)]
         public bool isWindowed;
+
+        [FieldOffset(0x4f4)]
+        public IntPtr DX9Device;
     }
 }
