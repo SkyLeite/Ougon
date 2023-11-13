@@ -75,6 +75,10 @@ namespace Ougon
         public unsafe delegate void TickMatch(Match* match, char param_1);
         private IHook<TickMatch> _tickMatchHook;
 
+        [Function(CallingConventions.Cdecl)]
+        public unsafe delegate byte* FormatDDS(int* LZLRFile, byte* outBuffer);
+        private IHook<FormatDDS> _formatDDSHook;
+
         private double FrameInterval; // Time per frame in milliseconds
         private nuint BaseAddress;
         private nint _setTimerAddress;
@@ -239,6 +243,19 @@ namespace Ougon
 
             var tickMatchPointer = baseAddress + tickMatchHook.Offset;
             _tickMatchHook = _hooks.CreateHook<TickMatch>(MyTickMatch, (long)tickMatchPointer).Activate();
+
+            var formatDDSHook = scanner.FindPattern("55 8B EC 83 EC 08 53 56 57 8B 7D");
+            if (!formatDDSHook.Found)
+                throw new Exception("FormatDDS Not Found");
+
+            var formatDDSPointer = baseAddress + formatDDSHook.Offset;
+            _formatDDSHook = _hooks.CreateHook<FormatDDS>(MyFormatDDS, (long)formatDDSPointer).Activate();
+        }
+
+        private unsafe byte* MyFormatDDS(int* LZLRFile, byte* outBuffer)
+        {
+            _logger.WriteLineAsync("Formatting DDS...");
+            return _formatDDSHook.OriginalFunction(LZLRFile, outBuffer);
         }
 
         private unsafe string GetAddr(void* ptr)

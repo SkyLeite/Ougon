@@ -1,4 +1,6 @@
 using System.Runtime.InteropServices;
+using SharpDX.Direct3D9;
+using static Ougon.Mod;
 
 namespace Ougon
 {
@@ -39,6 +41,58 @@ namespace Ougon
     }
 
     [StructLayout(LayoutKind.Explicit)]
+    public unsafe struct Sprite {
+        [FieldOffset(0x8)]
+        public LZLRFile* lzlr;
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
+    public unsafe struct LZLRFile {
+        [FieldOffset(0x0)]
+        public char* LZLR;
+
+        [FieldOffset(0x4)]
+        public int DDSSize;
+
+        [FieldOffset(0x8)]
+        public short DDSOffset;
+
+        public static Texture? GetTexture(GameState * gameState, LZLRFile* lzlr, FormatDDS formatDDS) {
+            var lzlrAddress = new IntPtr(lzlr);
+            var ddsPtr = IntPtr.Add(lzlrAddress, lzlr->DDSOffset);
+
+            try
+            {
+                var ddsData = formatDDS((int*)lzlr, null);
+                var size = lzlr->DDSSize;
+                byte[] arr = new byte[size];
+                Marshal.Copy((IntPtr)ddsData, arr, 0, size);
+
+                var device = SharpDX.Direct3D9.Device.FromPointer<SharpDX.Direct3D9.Device>(gameState->DX9Device);
+                int width = 128;
+                int height = 512;
+                int mipLevels = 1;
+                var usage = SharpDX.Direct3D9.Usage.None;
+                var format = SharpDX.Direct3D9.Format.A8R8G8B8;
+                var pool = SharpDX.Direct3D9.Pool.Managed;
+                var filter = (SharpDX.Direct3D9.Filter)1;
+                var mipFilter = SharpDX.Direct3D9.Filter.Box;
+                var colorKey = 0;
+                var texture = SharpDX.Direct3D9.Texture.FromMemory(device, arr, width, height, mipLevels, usage, format, pool, filter, mipFilter, colorKey);
+                return texture;
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+
+            return null;
+        }
+    }
+
+
+    [StructLayout(LayoutKind.Explicit)]
     public unsafe struct GameCharacter
     {
         // Pointer to a team
@@ -47,6 +101,19 @@ namespace Ougon
 
         [FieldOffset(0xC)]
         public Sequence* currentSequence;
+
+        [FieldOffset(0x60)]
+        public Frame* currentFrame;
+
+        [FieldOffset(0x64)]
+        public Frame* nextFrame;
+
+        [FieldOffset(0x1A)]
+        public Frame* currentSpriteID;
+
+        [FieldOffset(0x51C)]
+        // [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.U4, SizeConst = 4096)]
+        public Sprite* sprites;
 
         [FieldOffset(0x144)]
         public GameCharacterInMatch* inMatch;
@@ -237,6 +304,16 @@ namespace Ougon
             }
 
             return sequenceArray;
+        }
+
+        public static Sprite* GetSpriteFromID(GameCharacter* character, ushort sprite_id) {
+            var spriteArray = new IntPtr(character->sprites);
+            var spriteOffset = sprite_id * 4;
+            var spriteAddr = (Sprite**)IntPtr.Add(spriteArray, spriteOffset);
+
+            Console.WriteLine($"id: {sprite_id} arr: {spriteArray.ToString("x")} offset: {spriteOffset} {spriteOffset.ToString("x")} Sprite addres: {new IntPtr(spriteAddr).ToString("x")}");
+
+            return *spriteAddr;
         }
     }
 
