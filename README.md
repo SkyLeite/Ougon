@@ -46,6 +46,7 @@ The following is a list of my goals with this mod, in no particular order. Some 
 * 🏁 Fix grey health disappearing when a single HP bar is lost
   * This might not be a glitch. Instead, the glitch might be that when you lose the exact amount of a single bar of HP, grey health is not lost (thanks Hexer)
 * 🏁 Input system seems to be janky on keybord, particularly related to diagonal inputs
+  * Simultaneous inputs also suck
 * 🏁 Fix not being able to bind to R2/L2
 * 🏁 Fix controller hotplug
 * 🏁 Fix training mode reset erasing recorded inputs for the dummy
@@ -70,6 +71,7 @@ The following is a list of my goals with this mod, in no particular order. Some 
 * 🏁 Change characters in real time
 * 🏁 Change character palette in real time
 * 🏁 Accessibility / training tool where attacks play specific sounds for easier practice of timing
+* 🏁 Detect current game-mode so people can't use this in online matches
 
 ### Online
 * 🏁 Set delay and rollback cooldown on the fly

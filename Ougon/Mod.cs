@@ -75,11 +75,36 @@ namespace Ougon
         public unsafe delegate void TickMatch(Match* match, char param_1);
         private IHook<TickMatch> _tickMatchHook;
 
+        [Function(CallingConventions.Cdecl)]
+        public unsafe delegate byte* FormatDDS(int* LZLRFile, byte* outBuffer);
+        private IHook<FormatDDS> _formatDDSHook;
+
+        [Function(CallingConventions.Stdcall)]
+        public unsafe delegate int D3DXCreateTextureFromFileInMemoryEx(
+            IntPtr pDevice,
+            IntPtr pSrcData,
+            uint SrcDataSize,
+            uint Width,
+            uint Height,
+            uint MipLevels,
+            uint Usage,
+            uint Format,
+            uint Pool,
+            uint Filter,
+            uint MipFilter,
+            uint ColorKey,
+            byte* pSrcInfo,
+            byte* pPalette,
+            byte** ppTexture
+        );
+        private IHook<D3DXCreateTextureFromFileInMemoryEx> _createTextureHook;
+
         private double FrameInterval; // Time per frame in milliseconds
         private nuint BaseAddress;
         private nint _setTimerAddress;
         private Ougon.GUI.Debug? _gui;
         private Context _context;
+        private ModContext _modContext;
 
         // AttackType:
         // 0 = normal hit
@@ -156,7 +181,7 @@ namespace Ougon
             var str = (GameState**)(BaseAddress + 0xf17f8);
             this._gameState = *str;
 
-            new Ougon.GUI.Debug(_hooks, _gameState, _context);
+            new Ougon.GUI.Debug(_hooks, _gameState, _context, _modContext);
 
             _endSceneHook.OriginalFunction();
         }
@@ -176,14 +201,14 @@ namespace Ougon
 
         unsafe public Mod(ModContext context)
         {
-
             _modLoader = context.ModLoader;
             _hooks = context.Hooks;
             _logger = context.Logger;
             _owner = context.Owner;
             _configuration = context.Configuration;
             _modConfig = context.ModConfig;
-            _context = new Context();
+            _modContext = context;
+            _context = new Context(_modContext);
             this.FrameInterval = 1000.0 / _configuration.FPSLimit;
 
             var thisProcess = Process.GetCurrentProcess();
@@ -239,6 +264,38 @@ namespace Ougon
 
             var tickMatchPointer = baseAddress + tickMatchHook.Offset;
             _tickMatchHook = _hooks.CreateHook<TickMatch>(MyTickMatch, (long)tickMatchPointer).Activate();
+
+            var formatDDSHook = scanner.FindPattern("55 8B EC 83 EC 08 53 56 57 8B 7D");
+            if (!formatDDSHook.Found)
+                throw new Exception("FormatDDS Not Found");
+
+            var formatDDSPointer = baseAddress + formatDDSHook.Offset;
+            _formatDDSHook = _hooks.CreateHook<FormatDDS>(MyFormatDDS, (long)formatDDSPointer).Activate();
+
+            var createTexture = *(int *)new IntPtr(0x4c267c);
+            _createTextureHook = _hooks.CreateHook<D3DXCreateTextureFromFileInMemoryEx>(MyD3DXCreateTextureFromFileInMemoryEx, (long)createTexture).Activate();
+
+            _context.CreateTexture = MyD3DXCreateTextureFromFileInMemoryEx;
+            _context.FormatDDS = MyFormatDDS;
+        }
+
+        private unsafe byte* MyFormatDDS(int* LZLRFile, byte* outBuffer)
+        {
+            _logger.WriteLineAsync("Formatting DDS...");
+            return _formatDDSHook.OriginalFunction(LZLRFile, outBuffer);
+        }
+
+        private unsafe int MyD3DXCreateTextureFromFileInMemoryEx(nint pDevice, nint pSrcData, uint SrcDataSize, uint Width, uint Height, uint MipLevels, uint Usage, uint Format, uint Pool, uint Filter, uint MipFilter, uint ColorKey, byte* pSrcInfo, byte* pPalette, byte** ppTexture)
+        {
+            _logger.WriteLineAsync("Creating texture...");
+            var ret = _createTextureHook.OriginalFunction(pDevice, pSrcData, SrcDataSize, Width, Height, MipLevels, Usage, Format, Pool, Filter, MipFilter, ColorKey, pSrcInfo, pPalette, ppTexture);
+
+            _logger.WriteLineAsync($"ret: {ret}");
+            if (ret == 0) {
+                _logger.WriteLineAsync($"TexturePtr: {new IntPtr(*ppTexture).ToString("x")}");
+            }
+
+            return ret;
         }
 
         private unsafe string GetAddr(void* ptr)
