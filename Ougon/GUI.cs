@@ -222,6 +222,10 @@ namespace Ougon.GUI
 
                 foreach (var frame in sequence->frames())
                 {
+                    if (frame->duration < 1) {
+                        continue;
+                    }
+
                     if (ImGui.TreeNodePtr(frameI, $"Frame {frameI}"))
                     {
                         int durationInt = frame->duration;
