@@ -78,3 +78,4 @@ The following is a list of my goals with this mod, in no particular order. Some 
 * 🏁 Combo trials
 * 🏁 Community-made tutorial
 * 🏁 Jump into training mode from replay (I think Strive has something like this and it's apparently cool, need to look into it more)
+* 🏁 Add more music from the VN
