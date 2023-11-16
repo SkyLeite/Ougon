@@ -40,6 +40,8 @@ The following is a list of my goals with this mod, in no particular order. Some 
 * 🏁 Add video settings in-game
 * 🏁 Port 2.31's netcode to Steam, or at least improve it
   * Not sure how they differ yet
+* 🏁 Disable render function hook if user has old FPS limiter installed
+  * Currently the game just crashes with no information in that situation
 
 ### Bugfixes
 * ✔️ Fix running at the incorrect speed in higher refresh rate monitors by implementing an FPS limiter (configurable, default 60)
