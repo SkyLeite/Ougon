@@ -63,6 +63,7 @@ The following is a list of my goals with this mod, in no particular order. Some 
 * ✔️ Character name
 * 🏁 Character move visualizer
 * 🏁 Move's properties and values (like damage, knockback type, etc) (read + write)
+* 🏁 Enable debug messages for online matches
 
 ### Training mode
 * 🏁 In-game real-time hitbox visualizer
