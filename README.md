@@ -53,6 +53,7 @@ The following is a list of my goals with this mod, in no particular order. Some 
 * 🏁 Fix training mode reset erasing recorded inputs for the dummy
 * 🏁 Fix fullscreen not working in some setups
   * Particularly Hexer's, with an RTX2060. No idea why this could be happening, will need more debug information
+* 🏁 Fix music looping when resetting during training mode
 
 ### Debug menu
 * ✔️ Character health (read + write)
