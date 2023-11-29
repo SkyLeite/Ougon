@@ -42,6 +42,7 @@ The following is a list of my goals with this mod, in no particular order. Some 
   * Not sure how they differ yet
 * 🏁 Disable render function hook if user has old FPS limiter installed
   * Currently the game just crashes with no information in that situation
+* 🏁 Export replays to video files
 
 ### Bugfixes
 * ✔️ Fix running at the incorrect speed in higher refresh rate monitors by implementing an FPS limiter (configurable, default 60)
@@ -74,9 +75,14 @@ The following is a list of my goals with this mod, in no particular order. Some 
 * 🏁 Change characters in real time
 * 🏁 Change character palette in real time
 * 🏁 Accessibility / training tool where attacks play specific sounds for easier practice of timing
+* 🏁 Add option to freeze / disable stun
 
 ### Online
 * 🏁 Set delay and rollback cooldown on the fly
+* 🏁 Custom matchmaking server, allowing integration with Discord (etc.)
+* 🏁 Spectate functionality
+  * Investigate if this is already built-in but disabled / unfinished
+  * A custom matchmaking server could help, since players could relay match information to a central server, for spectators to receive and replay on the client
 
 ### Fun
 * 🏁 Combo trials
