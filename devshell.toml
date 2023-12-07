@@ -7,3 +7,28 @@ packages = [
 
 [[commands]]
 package = "hello"
+
+[[commands]]
+name = "game"
+help = "Start the game in a Wine Virtual Desktop"
+command = "./scripts/run-game.sh"
+category = "Development"
+
+[[commands]]
+name = "debug"
+help = "Starts x32dbg"
+command = "./scripts/run-debugger.sh"
+category = "Development"
+
+[[commands]]
+name = "killall"
+help = "Kills all wine processes"
+category = "Development"
+command = "./scripts/killall.sh"
+
+
+[[commands]]
+name = "start"
+help = "Starts a development session"
+category = "Development"
+command = "./scripts/run-game.sh & ./scripts/run-debugger.sh"
