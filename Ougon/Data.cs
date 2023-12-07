@@ -109,7 +109,7 @@ namespace Ougon
         public Frame* nextFrame;
 
         [FieldOffset(0x1A)]
-        public Frame* currentSpriteID;
+        public ushort currentSpriteID;
 
         [FieldOffset(0x51C)]
         // [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.U4, SizeConst = 4096)]
