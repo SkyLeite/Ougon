@@ -68,7 +68,7 @@ The following is a list of my goals with this mod, in no particular order. Some 
 * 🏁 Enable debug messages for online matches
 
 ### Training mode
-* 🏁 In-game real-time hitbox visualizer
+* ✔️ In-game real-time hitbox visualizer
 * 🏁 In-game real-time frame data visualizer
 * 🏁 Combo damage
 * 🏁 Combo scaling visualizer
