@@ -254,7 +254,6 @@ namespace Ougon
 
         private unsafe byte* MyFormatDDS(int* LZLRFile, byte* outBuffer)
         {
-            _logger.WriteLineAsync("Formatting DDS...");
             return _formatDDSHook.OriginalFunction(LZLRFile, outBuffer);
         }
 
