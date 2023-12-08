@@ -45,6 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DearImguiSharp" Version="1.88.3" />
     <PackageReference Include="ImGui.NET" Version="1.89.9.3" />
     <PackageReference Include="Reloaded.Imgui.Hook" Version="4.0.1" />
     <PackageReference Include="Reloaded.Imgui.Hook.Direct3D9" Version="1.0.2" />
