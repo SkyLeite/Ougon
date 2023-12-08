@@ -1,3 +1,5 @@
+using Ougon.Data;
+
 namespace Ougon
 {
     class Context

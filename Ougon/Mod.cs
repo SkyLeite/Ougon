@@ -1,4 +1,5 @@
-﻿using Ougon.Configuration;
+﻿using Ougon.Data;
+using Ougon.Configuration;
 using Ougon.Template;
 using Reloaded.Mod.Interfaces;
 using System.Runtime.InteropServices;

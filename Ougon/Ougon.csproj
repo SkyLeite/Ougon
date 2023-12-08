@@ -71,4 +71,8 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Ougon.Data\Ougon.Data.csproj" />
+  </ItemGroup>
+
 </Project>
