@@ -1,5 +1,4 @@
 using System.Runtime.InteropServices;
-using SharpDX.Direct3D9;
 
 namespace Ougon
 {

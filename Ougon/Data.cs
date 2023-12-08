@@ -1,5 +1,4 @@
 using System.Runtime.InteropServices;
-using SharpDX.Direct3D9;
 using static Ougon.Mod;
 
 namespace Ougon
@@ -65,39 +64,6 @@ namespace Ougon
 
         [FieldOffset(0x8)]
         public short DDSOffset;
-
-        public static Texture? GetTexture(GameState * gameState, LZLRFile* lzlr, FormatDDS formatDDS) {
-            var lzlrAddress = new IntPtr(lzlr);
-            var ddsPtr = IntPtr.Add(lzlrAddress, lzlr->DDSOffset);
-
-            try
-            {
-                var ddsData = formatDDS((int*)lzlr, null);
-                var size = lzlr->DDSSize;
-                byte[] arr = new byte[size];
-                Marshal.Copy((IntPtr)ddsData, arr, 0, size);
-
-                var device = SharpDX.Direct3D9.Device.FromPointer<SharpDX.Direct3D9.Device>(gameState->DX9Device);
-                int width = 128;
-                int height = 512;
-                int mipLevels = 1;
-                var usage = SharpDX.Direct3D9.Usage.None;
-                var format = SharpDX.Direct3D9.Format.A8R8G8B8;
-                var pool = SharpDX.Direct3D9.Pool.Managed;
-                var filter = (SharpDX.Direct3D9.Filter)1;
-                var mipFilter = SharpDX.Direct3D9.Filter.Box;
-                var colorKey = 0;
-                var texture = SharpDX.Direct3D9.Texture.FromMemory(device, arr, width, height, mipLevels, usage, format, pool, filter, mipFilter, colorKey);
-                return texture;
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-
-            return null;
-        }
     }
 
 
