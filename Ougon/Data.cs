@@ -19,6 +19,15 @@ namespace Ougon
         [FieldOffset(0x28)]
         public GameCharacter* p2Character2;
 
+        [FieldOffset(0xB68)]
+        public float cameraPositionX;
+
+        [FieldOffset(0xB6C)]
+        public float cameraPositionY;
+
+        [FieldOffset(0xB80)]
+        public float cameraZoomFactor;
+
         [FieldOffset(0xb88)]
         public int timer;
 
@@ -108,8 +117,17 @@ namespace Ougon
         [FieldOffset(0x64)]
         public Frame* nextFrame;
 
+        [FieldOffset(0x2aa68)]
+        public bool isLeftSide;
+
         [FieldOffset(0x1A)]
         public ushort currentSpriteID;
+
+        [FieldOffset(0xD4)]
+        public float absolutePositionX;
+
+        [FieldOffset(0xD8)]
+        public float absolutePositionY;
 
         [FieldOffset(0x51C)]
         // [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.U4, SizeConst = 4096)]
@@ -432,6 +450,15 @@ namespace Ougon
     [StructLayout(LayoutKind.Explicit)]
     public struct SequenceHeader
     {
+        [FieldOffset(0x0)]
+        public int movementState;
+
+        [FieldOffset(0x4)]
+        public int movementState2;
+
+        [FieldOffset(0x8)]
+        public int movementState3;
+
         [FieldOffset(0x40)]
         public uint frame_count;
     }

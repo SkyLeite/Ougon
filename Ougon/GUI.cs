@@ -1,8 +1,10 @@
 using Reloaded.Hooks.Definitions;
+using igNET = ImGuiNET;
 using Reloaded.Imgui.Hook;
 using Reloaded.Imgui.Hook.Implementations;
 using DearImguiSharp;
 using TextCopy;
+using System.Numerics;
 
 namespace Ougon.GUI
 {
@@ -11,6 +13,9 @@ namespace Ougon.GUI
         private unsafe GameState* _gameState;
         public Context _context;
         private readonly IReloadedHooks? _hooks;
+        Vector2 initialPosition = new Vector2(0, 0);
+        Vector2 hitboxPositionMax = new Vector2(0, 0);
+        bool showHitboxes = false;
 
         public unsafe Debug(IReloadedHooks hooks, GameState* gameState, Context context)
         {
@@ -35,6 +40,61 @@ namespace Ougon.GUI
             }).ConfigureAwait(false);
         }
 
+        private unsafe void RenderPlayerCenter(GameCharacter* character) {
+            var minimum = new Vector2(character->absolutePositionX, character->absolutePositionY);
+            var maximum = new Vector2(character->absolutePositionX, 216 + character->inMatch->positionY);
+
+            var dl = igNET.ImGui.GetForegroundDrawList();
+            dl.AddRect(minimum, maximum, igNET.ImGui.GetColorU32(new Vector4(255, 255, 255, 255)));
+        }
+
+        private unsafe void RenderHitbox(GameCharacter* character, Hitbox hitbox, Vector4? color) {
+
+            if (color == null) {
+                color = new Vector4(0, 255, 0, 0.2f);
+            }
+
+            var currentFrameTex = new Vector2(character->currentFrame->tex_x, character->currentFrame->tex_y);
+
+            var characterOrigin = new Vector2(character->absolutePositionX, character->absolutePositionY);
+
+            hitbox.x = (short)(hitbox.x * _context.match->cameraZoomFactor);
+            hitbox.y = (short)(hitbox.y * _context.match->cameraZoomFactor);
+            hitbox.w = (short)(hitbox.w * _context.match->cameraZoomFactor);
+            hitbox.h = (short)(hitbox.h * _context.match->cameraZoomFactor);
+
+            if (character->isLeftSide) {
+                hitbox.x = (short)(hitbox.x * -1);
+                hitbox.w = (short)(hitbox.w * -1);
+                currentFrameTex.X = currentFrameTex.X * -1;
+            }
+
+            var one = characterOrigin + new Vector2(hitbox.x + currentFrameTex.X, hitbox.y + currentFrameTex.Y);
+            var two = new Vector2(one.X - hitbox.w, one.Y - hitbox.h);
+
+            one.X += hitbox.w / 2;
+            two.X += hitbox.w / 2;
+            one.Y += hitbox.h / 2;
+            two.Y += hitbox.h / 2;
+
+            if (one.X > two.X) {
+                var t = one.X;
+                one.X = two.X;
+                two.X = t;
+            }
+
+            if (one.Y > two.Y) {
+                var t = one.Y;
+                one.Y = two.Y;
+                two.Y = t;
+            }
+
+            if (hitbox.w != 0 && hitbox.h != 0) {
+                var dl = igNET.ImGui.GetForegroundDrawList();
+                dl.AddRectFilled(one, two, igNET.ImGui.GetColorU32((Vector4)color));
+            }
+        }
+
         private unsafe void RenderPlayer(int playerIndex, GameCharacter*[] characters)
         {
                 var player = playerIndex switch {
@@ -50,6 +110,9 @@ namespace Ougon.GUI
                 ImGui.SetNextItemOpen(true, (int)ImGuiCond.Once);
                 if (ImGui.TreeNodeStr($"Player {playerIndex}"))
                 {
+                    var io = ImGui.GetIO();
+                    var viewport = ImGui.GetMainViewport();
+
                     int i = 0;
                     foreach (GameCharacter* character in characters) {
                         var _character = player.characters[i];
@@ -58,6 +121,11 @@ namespace Ougon.GUI
                         var color = _character.color;
 
                         _character.AddToSequenceHistory((nint)character->currentSequence);
+                        ImGui.Text($"CurrentFrameID: {character->currentFrame->sprite_id}");
+
+                        var currentFrame = character->currentFrame;
+
+                        RenderPlayerCenter(character);
 
                         ImGui.SetNextItemOpen(true, (int)ImGuiCond.Once);
                         if (ImGui.TreeNodeStr($"{name} ({color})")) {
@@ -68,6 +136,10 @@ namespace Ougon.GUI
 
                             ImGui.InputFloat($"Position X", ref character->inMatch->positionX, 0.0f, 0.0f, "%.3f", 0);
                             ImGui.InputFloat($"Position Y", ref character->inMatch->positionY, 0.0f, 0.0f, "%.3f", 0);
+
+                            ImGui.Text($"Absolute Position X: {character->absolutePositionX}");
+                            ImGui.Text($"Absolute Position Y: {character->absolutePositionY}");
+                            ImGui.Text($"Is Left Side: {character->isLeftSide}");
 
                             if (ImGui.TreeNodeStr("Moves"))
                             {
@@ -236,6 +308,8 @@ namespace Ougon.GUI
                         ImGui.InputInt($"Damage", ref damageInt, 0, 1, 0);
                         frame->attack.damage = (byte)(damageInt / 3);
 
+                        ImGui.Text($"Tex X: {frame->tex_x}");
+                        ImGui.Text($"Tex Y: {frame->tex_y}");
                         RenderHitbox("Attackbox", ref frame->attackbox);
                         RenderHitbox("Hurtbox 1", ref frame->hitbox1);
                         RenderHitbox("Hurtbox 2", ref frame->hitbox2);
@@ -275,12 +349,23 @@ namespace Ougon.GUI
         private unsafe void RenderDebugWindow()
         {
             bool isDefaultOpen = true;
+            bool isDefaultOpen2 = true;
             ImGui.Begin("Debug", ref isDefaultOpen, 0);
 
             var defaultWindowSize = new ImVec2();
             defaultWindowSize.X = 300;
             defaultWindowSize.Y = 400;
             ImGui.SetWindowSizeVec2(defaultWindowSize, (int)ImGuiCond.FirstUseEver);
+            ImGui.ShowDemoWindow(ref isDefaultOpen2);
+
+            var dl = igNET.ImGui.GetForegroundDrawList();
+            dl.AddRect(initialPosition, hitboxPositionMax, igNET.ImGui.GetColorU32(new Vector4(255, 255, 255, 255)));
+
+            ImGui.DragFloat("MinimumX", ref initialPosition.X, 0, 0, 10800, "%.3f", 0);
+            ImGui.DragFloat("MinimumY", ref initialPosition.Y, 0, 0, 10800, "%.3f", 0);
+
+            ImGui.DragFloat("MaximumX", ref hitboxPositionMax.X, 0, 0, 10800, "%.3f", 0);
+            ImGui.DragFloat("MaximumY", ref hitboxPositionMax.Y, 0, 0, 10800, "%.3f", 0);
 
             if (ImGui.CollapsingHeaderBoolPtr("General", ref isDefaultOpen, 0)) {
                 ImGui.Text($"FPS: {_gameState->fps.ToString("0.##")}");
@@ -288,9 +373,32 @@ namespace Ougon.GUI
 
             if (_context.match != null && _context.match->isValid())
             {
+                ImGui.Checkbox("Show hitboxes", ref this.showHitboxes);
+
+                if (this.showHitboxes) {
+                    var p1Characters = _context.match->player1Characters();
+                    var p2Characters = _context.match->player2Characters();
+
+                    foreach (GameCharacter* character in p1Characters) {
+                        RenderHitbox(character, character->currentFrame->attackbox, new Vector4(255, 0, 0, 0.2f));
+                        RenderHitbox(character, character->currentFrame->hitbox1, null);
+                        RenderHitbox(character, character->currentFrame->hitbox2, null);
+                        RenderHitbox(character, character->currentFrame->hitbox3, null);
+                    }
+
+                    foreach (GameCharacter* character in p2Characters) {
+                        RenderHitbox(character, character->currentFrame->attackbox, new Vector4(255, 0, 0, 0.2f));
+                        RenderHitbox(character, character->currentFrame->hitbox1, null);
+                        RenderHitbox(character, character->currentFrame->hitbox2, null);
+                        RenderHitbox(character, character->currentFrame->hitbox3, null);
+                    }
+                }
+
                 if (ImGui.CollapsingHeaderBoolPtr("Current Match", ref isDefaultOpen, 0))
                 {
                     RenderPointer("Match:", _context.match);
+                    ImGui.Text($"Camera Position: {_context.match->cameraPositionX}");
+                    ImGui.Text($"Camera Zoom: {_context.match->cameraZoomFactor}");
 
                     {
                         ImGui.BeginGroup();
