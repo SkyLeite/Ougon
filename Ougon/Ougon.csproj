@@ -15,6 +15,7 @@
          Test trimming with: `BuildLinked.ps1` in PowerShell. -->
     <ReloadedILLink>false</ReloadedILLink>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
 
   <ItemGroup>
