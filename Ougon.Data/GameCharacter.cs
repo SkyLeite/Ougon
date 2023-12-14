@@ -220,6 +220,14 @@ public unsafe struct GameCharacter
         return sequenceArray;
     }
 
+    public unsafe static int GetSequenceIndex(GameCharacter* character, string sequenceStr) {
+        int characterBaseAddress = (int)character;
+
+        int offset = (int)Marshal.OffsetOf<GameCharacter>(sequenceStr);
+
+        return (offset - 0x520) / 4;
+    }
+
     public static Sprite* GetSpriteFromID(GameCharacter* character, ushort sprite_id)
     {
         var spriteArray = new IntPtr(character->sprites);

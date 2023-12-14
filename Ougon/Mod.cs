@@ -80,6 +80,10 @@ namespace Ougon
         public unsafe delegate byte* FormatDDS(int* LZLRFile, byte* outBuffer);
         private IHook<FormatDDS> _formatDDSHook;
 
+        [Function(CallingConventions.MicrosoftThiscall)]
+        public unsafe delegate void PlaySequence(GameCharacter* character, int sequenceIndex, int existance, int zero);
+        private IHook<PlaySequence> _playSequenceHook;
+
         private double FrameInterval; // Time per frame in milliseconds
         private nuint BaseAddress;
         private nint _setTimerAddress;
@@ -251,6 +255,20 @@ namespace Ougon
 
             var formatDDSPointer = baseAddress + formatDDSHook.Offset;
             _formatDDSHook = _hooks.CreateHook<FormatDDS>(MyFormatDDS, (long)formatDDSPointer).Activate();
+
+            var playSequenceHook = scanner.FindPattern("55 8B EC 56 57 8B 7D ?? 8B F1 83 FF FF");
+            if (!playSequenceHook.Found)
+                throw new Exception("Playsequence Not Found");
+
+            var playSequencePointer = baseAddress + playSequenceHook.Offset;
+            _playSequenceHook = _hooks.CreateHook<PlaySequence>(MyPlaySequence, (long)playSequencePointer).Activate();
+
+            _context.mod = this;
+        }
+
+        public unsafe void MyPlaySequence(GameCharacter* character, int sequenceIndex, int existance, int zero)
+        {
+            _playSequenceHook.OriginalFunction(character, sequenceIndex, existance, zero);
         }
 
         private unsafe byte* MyFormatDDS(int* LZLRFile, byte* outBuffer)

@@ -1,6 +1,7 @@
 using System.Numerics;
 using DearImguiSharp;
 using Ougon.Data;
+using Ougon;
 using Reloaded.Hooks.Definitions;
 using Reloaded.Imgui.Hook;
 using Reloaded.Imgui.Hook.Implementations;
@@ -197,62 +198,62 @@ namespace Ougon.GUI
 
                         if (ImGui.TreeNodeStr("Moves"))
                         {
-                            RenderSequence("Idle", character->_5);
+                            RenderSequence("Idle", character, character->_5, "_5");
 
-                            RenderSequence("5->2", character->_5to2);
+                            RenderSequence("5->2", character, character->_5to2, "_5to2");
 
-                            RenderSequence("Crouching", character->_2);
+                            RenderSequence("Crouching", character, character->_2, "_2");
 
-                            RenderSequence("3->1", character->_3to1);
-                            RenderSequence("2->5", character->_2to5);
+                            RenderSequence("3->1", character, character->_3to1, "_3to1");
+                            RenderSequence("2->5", character, character->_2to5, "_2to5");
 
-                            RenderSequence("Walk forward", character->_6);
-                            RenderSequence("Walk backward", character->_4);
+                            RenderSequence("Walk forward", character, character->_6, "_6");
+                            RenderSequence("Walk backward", character, character->_4, "_4");
 
-                            RenderSequence("Neutral jump", character->_8);
-                            RenderSequence("Forward jump", character->_9);
-                            RenderSequence("Backward jump", character->_7);
+                            RenderSequence("Neutral jump", character, character->_8, "_8");
+                            RenderSequence("Forward jump", character, character->_9, "_9");
+                            RenderSequence("Backward jump", character, character->_7, "_7");
 
-                            RenderSequence("Dash recovery", character->_66to5);
-                            RenderSequence("Backdash", character->_44);
+                            RenderSequence("Dash recovery", character, character->_66to5, "_66to5");
+                            RenderSequence("Backdash", character, character->_44, "_44");
 
-                            RenderSequence("Grab", character->grab);
-                            RenderSequence("Grab Whiff", character->grabWhiff);
+                            RenderSequence("Grab", character, character->grab, "grab");
+                            RenderSequence("Grab Whiff", character, character->grabWhiff, "grabWhiff");
 
-                            RenderSequence("Call tag", character->callTag);
-                            RenderSequence("Tag out", character->tagOut);
+                            RenderSequence("Call tag", character, character->callTag, "callTag");
+                            RenderSequence("Tag out", character, character->tagOut, "tagOut");
 
                             if (ImGui.TreeNodeStr("A"))
                             {
-                                RenderSequence("Far 5A", character->far5A);
-                                RenderSequence("Close 5A", character->close5A);
-                                RenderSequence("2A", character->_2A);
-                                RenderSequence("8A", character->j8A);
-                                RenderSequence("9A", character->j9A);
+                                RenderSequence("Far 5A", character, character->far5A, "far5A");
+                                RenderSequence("Close 5A", character, character->close5A, "close5A");
+                                RenderSequence("2A", character, character->_2A, "_2A");
+                                RenderSequence("8A", character, character->j8A, "j8A");
+                                RenderSequence("9A", character, character->j9A, "j9A");
 
                                 ImGui.TreePop();
                             }
 
                             if (ImGui.TreeNodeStr("B"))
                             {
-                                RenderSequence("Far 5B", character->far5B);
-                                RenderSequence("Close 5B", character->close5B);
-                                RenderSequence("6B", character->_6B);
-                                RenderSequence("2B", character->_2B);
-                                RenderSequence("8B", character->j8B);
-                                RenderSequence("9B", character->j9B);
+                                RenderSequence("Far 5B", character, character->far5B, "far5B");
+                                RenderSequence("Close 5B", character, character->close5B, "close5B");
+                                RenderSequence("6B", character, character->_6B, "_6B");
+                                RenderSequence("2B", character, character->_2B, "_2B");
+                                RenderSequence("8B", character, character->j8B, "j8B");
+                                RenderSequence("9B", character, character->j9B, "j9B");
 
                                 ImGui.TreePop();
                             }
 
                             if (ImGui.TreeNodeStr("C"))
                             {
-                                RenderSequence("Far 5C", character->far5C);
-                                RenderSequence("Close 5C", character->close5C);
-                                RenderSequence("6C", character->_6C);
-                                RenderSequence("2C", character->_2C);
-                                RenderSequence("8C", character->j8C);
-                                RenderSequence("9C", character->j9C);
+                                RenderSequence("Far 5C", character, character->far5C, "far5C");
+                                RenderSequence("Close 5C", character, character->close5C, "close5C");
+                                RenderSequence("6C", character, character->_6C, "_6C");
+                                RenderSequence("2C", character, character->_2C, "_2C");
+                                RenderSequence("8C", character, character->j8C, "j8C");
+                                RenderSequence("9C", character, character->j9C, "j9C");
 
                                 ImGui.TreePop();
                             }
@@ -261,46 +262,46 @@ namespace Ougon.GUI
                             {
                                 if (ImGui.TreeNodeStr("Special 1"))
                                 {
-                                    RenderSequence("A", character->specialMove1A);
-                                    RenderSequence("B", character->specialMove1B);
-                                    RenderSequence("C", character->specialMove1C);
-                                    RenderSequence("EX", character->specialMove1X);
+                                    RenderSequence("A", character, character->specialMove1A, "specialMove1A");
+                                    RenderSequence("B", character, character->specialMove1B, "specialMove1B");
+                                    RenderSequence("C", character, character->specialMove1C, "specialMove1C");
+                                    RenderSequence("EX", character, character->specialMove1X, "specialMove1X");
                                     ImGui.TreePop();
                                 }
 
                                 if (ImGui.TreeNodeStr("Special 2"))
                                 {
-                                    RenderSequence("A", character->specialMove2A);
-                                    RenderSequence("B", character->specialMove2B);
-                                    RenderSequence("C", character->specialMove2C);
-                                    RenderSequence("EX", character->specialMove2X);
+                                    RenderSequence("A", character, character->specialMove2A, "specialMove2A");
+                                    RenderSequence("B", character, character->specialMove2B, "specialMove2B");
+                                    RenderSequence("C", character, character->specialMove2C, "specialMove2C");
+                                    RenderSequence("EX", character, character->specialMove2X, "specialMove2X");
                                     ImGui.TreePop();
                                 }
 
                                 if (ImGui.TreeNodeStr("Special 3"))
                                 {
-                                    RenderSequence("A", character->specialMove3A);
-                                    RenderSequence("B", character->specialMove3B);
-                                    RenderSequence("C", character->specialMove3C);
-                                    RenderSequence("EX", character->specialMove3X);
+                                    RenderSequence("A", character, character->specialMove3A, "specialMove3A");
+                                    RenderSequence("B", character, character->specialMove3B, "specialMove3B");
+                                    RenderSequence("C", character, character->specialMove3C, "specialMove3C");
+                                    RenderSequence("EX", character, character->specialMove3X, "specialMove3X");
                                     ImGui.TreePop();
                                 }
 
                                 if (ImGui.TreeNodeStr("Special 4"))
                                 {
-                                    RenderSequence("A", character->specialMove4A);
-                                    RenderSequence("B", character->specialMove4B);
-                                    RenderSequence("C", character->specialMove4C);
-                                    RenderSequence("EX", character->specialMove4X);
+                                    RenderSequence("A", character, character->specialMove4A, "specialMove4A");
+                                    RenderSequence("B", character, character->specialMove4B, "specialMove4B");
+                                    RenderSequence("C", character, character->specialMove4C, "specialMove4C");
+                                    RenderSequence("EX", character, character->specialMove4X, "specialMove4X");
                                     ImGui.TreePop();
                                 }
 
                                 ImGui.TreePop();
                             }
 
-                            RenderSequence("Level 2 Super", character->super2);
-                            RenderSequence("Meta Declare", character->metaDeclare);
-                            RenderSequence("Meta Super", character->metaSuper);
+                            RenderSequence("Level 2 Super", character, character->super2, "super2");
+                            RenderSequence("Meta Declare", character, character->metaDeclare, "metaDeclare");
+                            RenderSequence("Meta Super", character, character->metaSuper, "metaSuper");
 
                             ImGui.TreePop();
                         }
@@ -357,12 +358,25 @@ namespace Ougon.GUI
             }
         }
 
-        private static unsafe void RenderSequence(string name, Sequence* sequence)
+        private unsafe void RenderSequence(string name, GameCharacter* character, Sequence* sequence, string sequenceStr)
         {
             if (ImGui.TreeNodeStr(name))
             {
                 RenderPointer("", sequence);
                 var frameI = 0;
+
+                var buttonSize = new ImVec2();
+                buttonSize.X = 100;
+                buttonSize.Y = 20;
+                if (ImGui.Button("Run", buttonSize))
+                {
+                    var sequenceIndex = GameCharacter.GetSequenceIndex(character, sequenceStr);
+                    if (_context.mod != null) {
+                        _context.mod.MyPlaySequence(character, sequenceIndex, 13, 0);
+                    } else {
+                        Console.WriteLine("MOD IS NULL LOL");
+                    }
+                }
 
                 foreach (var frame in sequence->frames())
                 {
@@ -373,6 +387,7 @@ namespace Ougon.GUI
 
                     if (ImGui.TreeNodePtr(frameI, $"Frame {frameI}"))
                     {
+                        RenderPointer("", frame);
                         int durationInt = frame->duration;
                         ImGui.InputInt($"Duration", ref durationInt, 0, 1, 0);
                         frame->duration = (ushort)durationInt;
