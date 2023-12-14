@@ -220,7 +220,8 @@ public unsafe struct GameCharacter
         return sequenceArray;
     }
 
-    public unsafe static int GetSequenceIndex(GameCharacter* character, string sequenceStr) {
+    public static unsafe int GetSequenceIndex(GameCharacter* character, string sequenceStr)
+    {
         int characterBaseAddress = (int)character;
 
         int offset = (int)Marshal.OffsetOf<GameCharacter>(sequenceStr);

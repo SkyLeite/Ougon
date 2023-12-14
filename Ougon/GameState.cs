@@ -2,7 +2,6 @@ using System.Runtime.InteropServices;
 
 namespace Ougon
 {
-
     [StructLayout(LayoutKind.Explicit)]
     public unsafe struct GameState
     {

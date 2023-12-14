@@ -1,18 +1,20 @@
-﻿using Reloaded.Mod.Interfaces;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Reloaded.Mod.Interfaces;
 
 namespace Ougon.Template.Configuration
 {
-    public class Configurable<TParentType> : IUpdatableConfigurable where TParentType : Configurable<TParentType>, new()
+    public class Configurable<TParentType> : IUpdatableConfigurable
+        where TParentType : Configurable<TParentType>, new()
     {
         // Default Serialization Options
-        public static JsonSerializerOptions SerializerOptions { get; } = new JsonSerializerOptions()
-        {
-            Converters = { new JsonStringEnumConverter() },
-            WriteIndented = true
-        };
+        public static JsonSerializerOptions SerializerOptions { get; } =
+            new JsonSerializerOptions()
+            {
+                Converters = { new JsonStringEnumConverter() },
+                WriteIndented = true
+            };
 
         /* Events */
 
@@ -88,7 +90,8 @@ namespace Ougon.Template.Configuration
         /// </summary>
         /// <param name="filePath">The full file path of the config.</param>
         /// <param name="configName">The name of the configuration.</param>
-        public static TParentType FromFile(string filePath, string configName) => ReadFrom(filePath, configName);
+        public static TParentType FromFile(string filePath, string configName) =>
+            ReadFrom(filePath, configName);
 
         /* Event */
 
@@ -99,7 +102,10 @@ namespace Ougon.Template.Configuration
         /// <returns></returns>
         private void MakeConfigWatcher()
         {
-            ConfigWatcher = new FileSystemWatcher(Path.GetDirectoryName(FilePath)!, Path.GetFileName(FilePath)!);
+            ConfigWatcher = new FileSystemWatcher(
+                Path.GetDirectoryName(FilePath)!,
+                Path.GetFileName(FilePath)!
+            );
             ConfigWatcher.Changed += (sender, e) => OnConfigurationUpdated();
             ConfigWatcher.EnableRaisingEvents = true;
         }
@@ -113,7 +119,11 @@ namespace Ougon.Template.Configuration
             {
                 // Load and copy events.
                 // Note: External program might still be writing to file while this is being executed, so we need to keep retrying.
-                var newConfig = Utilities.TryGetValue(() => ReadFrom(FilePath!, ConfigName!), 250, 2);
+                var newConfig = Utilities.TryGetValue(
+                    () => ReadFrom(FilePath!, ConfigName!),
+                    250,
+                    2
+                );
                 newConfig.ConfigurationUpdated = ConfigurationUpdated;
 
                 // Disable events for this instance.
@@ -133,9 +143,15 @@ namespace Ougon.Template.Configuration
         /* Utility */
         private static TParentType ReadFrom(string filePath, string configName)
         {
-            var result = (File.Exists(filePath)
-                ? JsonSerializer.Deserialize<TParentType>(File.ReadAllBytes(filePath), SerializerOptions)
-                : new TParentType()) ?? new TParentType();
+            var result =
+                (
+                    File.Exists(filePath)
+                        ? JsonSerializer.Deserialize<TParentType>(
+                            File.ReadAllBytes(filePath),
+                            SerializerOptions
+                        )
+                        : new TParentType()
+                ) ?? new TParentType();
 
             result.Initialize(filePath, configName);
             return result;

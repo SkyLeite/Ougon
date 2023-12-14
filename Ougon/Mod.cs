@@ -1,12 +1,12 @@
-﻿using Ougon.Data;
-using Ougon.Configuration;
-using Ougon.Template;
-using Reloaded.Mod.Interfaces;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Diagnostics;
-using Reloaded.Hooks.Definitions.X86;
+using Ougon.Configuration;
+using Ougon.Data;
+using Ougon.Template;
 using Reloaded.Hooks.Definitions;
+using Reloaded.Hooks.Definitions.X86;
 using Reloaded.Memory.Sigscan;
+using Reloaded.Mod.Interfaces;
 
 namespace Ougon
 {
@@ -49,7 +49,7 @@ namespace Ougon
         private unsafe GameState* _gameState;
 
         [Function(CallingConventions.Fastcall)]
-        public unsafe delegate void LoadMoves(bool *character);
+        public unsafe delegate void LoadMoves(bool* character);
         private IHook<LoadMoves> _loadMovesHook;
 
         [Function(CallingConventions.Stdcall)]
@@ -81,7 +81,12 @@ namespace Ougon
         private IHook<FormatDDS> _formatDDSHook;
 
         [Function(CallingConventions.MicrosoftThiscall)]
-        public unsafe delegate void PlaySequence(GameCharacter* character, int sequenceIndex, int existance, int zero);
+        public unsafe delegate void PlaySequence(
+            GameCharacter* character,
+            int sequenceIndex,
+            int existance,
+            int zero
+        );
         private IHook<PlaySequence> _playSequenceHook;
 
         private double FrameInterval; // Time per frame in milliseconds
@@ -99,22 +104,27 @@ namespace Ougon
             var character = *(int*)((int)_this + 0x2a604);
             var health = *(short*)(character + 0x2aa9c);
             var grayHealth = *(short*)(character + 0x2aaaa);
-            _logger.WriteLineAsync($"[MyCalculateHealth] attackType: {attackType} | baseAddress: {new IntPtr((int)_this).ToString("x")} | characterAddress: {new IntPtr((int)_this + 0x2a604).ToString("x")} | originalHealth: {health} | grayHealth: {grayHealth}");
+            _logger.WriteLineAsync(
+                $"[MyCalculateHealth] attackType: {attackType} | baseAddress: {new IntPtr((int)_this).ToString("x")} | characterAddress: {new IntPtr((int)_this + 0x2a604).ToString("x")} | originalHealth: {health} | grayHealth: {grayHealth}"
+            );
             _calculateHealthHook.OriginalFunction(_this, attackType);
         }
 
         public unsafe void MyLoadCharacters(byte* param_1, void* param_2, int* param_3)
         {
             var p = new IntPtr(param_2);
-            _logger.WriteLineAsync($"[MyLoadCharacters] param1: {new IntPtr(param_1).ToString("x")} | param_2 address: {new IntPtr(param_2).ToString("x")} | param_3: {*param_3}");
+            _logger.WriteLineAsync(
+                $"[MyLoadCharacters] param1: {new IntPtr(param_1).ToString("x")} | param_2 address: {new IntPtr(param_2).ToString("x")} | param_3: {*param_3}"
+            );
 
             var char1Pointer = param_1 + 0x40;
 
             // ushort[] characters = new[] { *char1Pointer, *(char1Pointer + 1), *(char1Pointer + 2), *(char1Pointer + 3) };
 
-            var characters = new List<Character> {};
+            var characters = new List<Character> { };
 
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 4; i++)
+            {
                 var characterPointer = char1Pointer + (i * 2);
                 var characterID = *characterPointer;
                 var characterColor = *(characterPointer + 1);
@@ -131,7 +141,9 @@ namespace Ougon
 
         public unsafe void MyDebug(char* param_1, char* param_2)
         {
-            _logger.WriteLineAsync($"[MyDebug] param_1: {Marshal.PtrToStringAnsi((IntPtr)param_1) + Marshal.PtrToStringAnsi((IntPtr)param_2)}");
+            _logger.WriteLineAsync(
+                $"[MyDebug] param_1: {Marshal.PtrToStringAnsi((IntPtr)param_1) + Marshal.PtrToStringAnsi((IntPtr)param_2)}"
+            );
         }
 
         public unsafe void MyRender()
@@ -182,10 +194,8 @@ namespace Ougon
             _renderHook.Enable();
         }
 
-
-        unsafe public Mod(ModContext context)
+        public unsafe Mod(ModContext context)
         {
-
             _modLoader = context.ModLoader;
             _hooks = context.Hooks;
             _logger = context.Logger;
@@ -214,21 +224,31 @@ namespace Ougon
             // Create the hook (don't forget to call Activate()).
             _renderHook = _hooks.CreateHook<Render>(MyRender, (long)renderPointer).Activate();
 
-            var endSceneResult = scanner.FindPattern("A1 ?? ?? ?? ?? 8B 80 ?? ?? ?? ?? 50 8B 08 FF 91 A8 ?? ?? ?? 3D 6C 08 76 88 75 ?? 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? 59 C3 ?? ?? ?? ?? ?? ?? ?? ?? ??");
+            var endSceneResult = scanner.FindPattern(
+                "A1 ?? ?? ?? ?? 8B 80 ?? ?? ?? ?? 50 8B 08 FF 91 A8 ?? ?? ?? 3D 6C 08 76 88 75 ?? 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? 59 C3 ?? ?? ?? ?? ?? ?? ?? ?? ??"
+            );
             if (!endSceneResult.Found)
                 throw new Exception("EndScene not found");
 
             var endScenePointer = baseAddress + endSceneResult.Offset;
-            _endSceneHook = _hooks.CreateHook<EndScene>(MyEndScene, (long)endScenePointer).Activate();
+            _endSceneHook = _hooks
+                .CreateHook<EndScene>(MyEndScene, (long)endScenePointer)
+                .Activate();
 
-            var loadCharactersResult = scanner.FindPattern("55 8B EC 81 EC 90 00 00 00 A1 ?? ?? ?? ?? 33 C5 89 45 ?? 8B 45");
+            var loadCharactersResult = scanner.FindPattern(
+                "55 8B EC 81 EC 90 00 00 00 A1 ?? ?? ?? ?? 33 C5 89 45 ?? 8B 45"
+            );
             if (!loadCharactersResult.Found)
                 throw new Exception("LoadCharacters not found");
 
             var loadCharactersPointer = baseAddress + loadCharactersResult.Offset;
-            _loadCharactersHook = _hooks.CreateHook<LoadCharacters>(MyLoadCharacters, (long)loadCharactersPointer).Activate();
+            _loadCharactersHook = _hooks
+                .CreateHook<LoadCharacters>(MyLoadCharacters, (long)loadCharactersPointer)
+                .Activate();
 
-            var debugResult = scanner.FindPattern("55 8B EC 81 EC 04 01 00 00 A1 ?? ?? ?? ?? 33 C5 89 45 ?? 83 3D ?? ?? ?? ?? 00");
+            var debugResult = scanner.FindPattern(
+                "55 8B EC 81 EC 04 01 00 00 A1 ?? ?? ?? ?? 33 C5 89 45 ?? 83 3D ?? ?? ?? ?? 00"
+            );
             if (!debugResult.Found)
                 throw new Exception("Debug not found");
 
@@ -240,33 +260,46 @@ namespace Ougon
                 throw new Exception("CalculateHealth not found");
 
             var calculateHealthPointer = baseAddress + calculateHealthHook.Offset;
-            _calculateHealthHook = _hooks.CreateHook<CalculateHealth>(MyCalculateHealth, (long)calculateHealthPointer).Activate();
+            _calculateHealthHook = _hooks
+                .CreateHook<CalculateHealth>(MyCalculateHealth, (long)calculateHealthPointer)
+                .Activate();
 
             var tickMatchHook = scanner.FindPattern("55 8B EC 83 EC 0C 56 8B F1 57");
             if (!tickMatchHook.Found)
                 throw new Exception("TickMatch not found");
 
             var tickMatchPointer = baseAddress + tickMatchHook.Offset;
-            _tickMatchHook = _hooks.CreateHook<TickMatch>(MyTickMatch, (long)tickMatchPointer).Activate();
+            _tickMatchHook = _hooks
+                .CreateHook<TickMatch>(MyTickMatch, (long)tickMatchPointer)
+                .Activate();
 
             var formatDDSHook = scanner.FindPattern("55 8B EC 83 EC 08 53 56 57 8B 7D");
             if (!formatDDSHook.Found)
                 throw new Exception("FormatDDS Not Found");
 
             var formatDDSPointer = baseAddress + formatDDSHook.Offset;
-            _formatDDSHook = _hooks.CreateHook<FormatDDS>(MyFormatDDS, (long)formatDDSPointer).Activate();
+            _formatDDSHook = _hooks
+                .CreateHook<FormatDDS>(MyFormatDDS, (long)formatDDSPointer)
+                .Activate();
 
             var playSequenceHook = scanner.FindPattern("55 8B EC 56 57 8B 7D ?? 8B F1 83 FF FF");
             if (!playSequenceHook.Found)
                 throw new Exception("Playsequence Not Found");
 
             var playSequencePointer = baseAddress + playSequenceHook.Offset;
-            _playSequenceHook = _hooks.CreateHook<PlaySequence>(MyPlaySequence, (long)playSequencePointer).Activate();
+            _playSequenceHook = _hooks
+                .CreateHook<PlaySequence>(MyPlaySequence, (long)playSequencePointer)
+                .Activate();
 
             _context.mod = this;
         }
 
-        public unsafe void MyPlaySequence(GameCharacter* character, int sequenceIndex, int existance, int zero)
+        public unsafe void MyPlaySequence(
+            GameCharacter* character,
+            int sequenceIndex,
+            int existance,
+            int zero
+        )
         {
             _playSequenceHook.OriginalFunction(character, sequenceIndex, existance, zero);
         }

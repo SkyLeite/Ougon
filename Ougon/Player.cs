@@ -1,9 +1,12 @@
-namespace Ougon {
-  class Player {
-    public List<Character> characters;
+namespace Ougon
+{
+    class Player
+    {
+        public List<Character> characters;
 
-    public Player(List<Character> characters) {
-        this.characters = characters;
+        public Player(List<Character> characters)
+        {
+            this.characters = characters;
+        }
     }
-  }
 }

@@ -45,10 +45,7 @@ namespace Ougon.Template
         /// <summary>
         /// Automatically called by the mod loader when the mod is about to be unloaded.
         /// </summary>
-        public virtual void Disposing()
-        {
-
-        }
+        public virtual void Disposing() { }
 
         /// <summary>
         /// Automatically called by the mod loader when the mod is about to be unloaded.

@@ -5,7 +5,7 @@ namespace Ougon.Template.Configuration
 {
     /// <summary>
     /// Creates the various different configurations used by the mod.
-    /// These configurations are available in the dropdown in Reloaded launcher. 
+    /// These configurations are available in the dropdown in Reloaded launcher.
     /// </summary>
     public class ConfiguratorMixinBase
     {
@@ -18,7 +18,10 @@ namespace Ougon.Template.Configuration
             // You can add any Configurable here.
             return new IUpdatableConfigurable[]
             {
-            Configurable<Config>.FromFile(Path.Combine(configFolder, "Config.json"), "Default Config")
+                Configurable<Config>.FromFile(
+                    Path.Combine(configFolder, "Config.json"),
+                    "Default Config"
+                )
             };
         }
 
@@ -45,8 +48,16 @@ namespace Ougon.Template.Configuration
 #pragma warning disable CS8321
             void TryMoveFile(string fileName)
             {
-                try { File.Move(Path.Combine(oldDirectory, fileName), Path.Combine(newDirectory, fileName)); }
-                catch (Exception) { /* Ignored */ }
+                try
+                {
+                    File.Move(
+                        Path.Combine(oldDirectory, fileName),
+                        Path.Combine(newDirectory, fileName)
+                    );
+                }
+                catch (Exception)
+                { /* Ignored */
+                }
             }
 #pragma warning restore CS8321
         }

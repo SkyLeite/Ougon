@@ -9,7 +9,13 @@ namespace Ougon.Template.Configuration
         /// <param name="sleepTime">Amount of sleep per iteration/attempt.</param>
         /// <param name="token">Token that allows for cancellation of the task.</param>
         /// <exception cref="Exception">Timeout expired.</exception>
-        public static T TryGetValue<T>(Func<T> getValue, int timeout, int sleepTime, CancellationToken token = default) where T : new()
+        public static T TryGetValue<T>(
+            Func<T> getValue,
+            int timeout,
+            int sleepTime,
+            CancellationToken token = default
+        )
+            where T : new()
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
@@ -27,7 +33,9 @@ namespace Ougon.Template.Configuration
                     valueSet = true;
                     break;
                 }
-                catch (Exception) { /* Ignored */ }
+                catch (Exception)
+                { /* Ignored */
+                }
 
                 Thread.Sleep(sleepTime);
             }

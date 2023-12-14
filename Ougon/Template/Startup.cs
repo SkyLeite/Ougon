@@ -31,7 +31,7 @@ namespace Ougon.Template
         /// <summary>
         /// An interface to Reloaded's the function hooks/detours library.
         /// See: https://github.com/Reloaded-Project/Reloaded.Hooks
-        ///      for documentation and samples. 
+        ///      for documentation and samples.
         /// </summary>
         private IReloadedHooks? _hooks;
 
@@ -64,21 +64,23 @@ namespace Ougon.Template
 
             // Please put your mod code in the class below,
             // use this class for only interfacing with mod loader.
-            _mod = new Mod(new ModContext()
-            {
-                Logger = _logger,
-                Hooks = _hooks,
-                ModLoader = _modLoader,
-                ModConfig = _modConfig,
-                Owner = this,
-                Configuration = _configuration,
-            });
+            _mod = new Mod(
+                new ModContext()
+                {
+                    Logger = _logger,
+                    Hooks = _hooks,
+                    ModLoader = _modLoader,
+                    ModConfig = _modConfig,
+                    Owner = this,
+                    Configuration = _configuration,
+                }
+            );
         }
 
         private void OnConfigurationUpdated(IConfigurable obj)
         {
             /*
-                This is executed when the configuration file gets 
+                This is executed when the configuration file gets
                 updated by the user at runtime.
             */
 
@@ -89,13 +91,16 @@ namespace Ougon.Template
 
         /* Mod loader actions. */
         public void Suspend() => _mod.Suspend();
+
         public void Resume() => _mod.Resume();
+
         public void Unload() => _mod.Unload();
 
         /*  If CanSuspend == false, suspend and resume button are disabled in Launcher and Suspend()/Resume() will never be called.
             If CanUnload == false, unload button is disabled in Launcher and Unload() will never be called.
         */
         public bool CanUnload() => _mod.CanUnload();
+
         public bool CanSuspend() => _mod.CanSuspend();
 
         /* Automatically called by the mod loader when the mod is about to be unloaded. */

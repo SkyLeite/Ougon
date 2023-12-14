@@ -24,7 +24,7 @@ namespace Ougon.Template.Configuration
 
         /// <summary>
         /// Returns a list of configurations.
-        /// </summary> 
+        /// </summary>
         public IUpdatableConfigurable[] Configurations => _configurations ?? MakeConfigurations();
         private IUpdatableConfigurable[]? _configurations;
 
@@ -46,7 +46,9 @@ namespace Ougon.Template.Configuration
         }
 
         public Configurator() { }
-        public Configurator(string configDirectory) : this()
+
+        public Configurator(string configDirectory)
+            : this()
         {
             ConfigFolder = configDirectory;
         }
@@ -58,7 +60,8 @@ namespace Ougon.Template.Configuration
         /// </summary>
         /// <param name="oldDirectory">Old directory containing the mod configs.</param>
         /// <param name="newDirectory">New directory pointing to user config folder.</param>
-        public void Migrate(string oldDirectory, string newDirectory) => _configuratorMixin.Migrate(oldDirectory, newDirectory);
+        public void Migrate(string oldDirectory, string newDirectory) =>
+            _configuratorMixin.Migrate(oldDirectory, newDirectory);
 
         /* Configurator */
 
@@ -88,11 +91,15 @@ namespace Ougon.Template.Configuration
         /// Allows for custom launcher/configurator implementation.
         /// If you have your own configuration program/code, run that code here and return true, else return false.
         /// </summary>
-        public bool TryRunCustomConfiguration() => _configuratorMixin.TryRunCustomConfiguration(this);
+        public bool TryRunCustomConfiguration() =>
+            _configuratorMixin.TryRunCustomConfiguration(this);
 
         /// <summary>
         /// Sets the mod directory for the Configurator.
         /// </summary>
-        public void SetModDirectory(string modDirectory) { ModFolder = modDirectory; }
+        public void SetModDirectory(string modDirectory)
+        {
+            ModFolder = modDirectory;
+        }
     }
 }
