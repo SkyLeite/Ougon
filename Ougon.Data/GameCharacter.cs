@@ -202,6 +202,9 @@ public unsafe struct GameCharacter
     [FieldOffset(0x780)]
     public Sequence* metaDeclare;
 
+    [FieldOffset(0x2a620)]
+    public int existance;
+
     public static Sequence*[] GetSequences(GameCharacter* character)
     {
         var length = 248;
