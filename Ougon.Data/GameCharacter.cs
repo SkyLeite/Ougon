@@ -64,7 +64,7 @@ public unsafe struct GameCharacter
     [FieldOffset(0x54C)]
     public Sequence* _9;
 
-    [FieldOffset(0x54C)]
+    [FieldOffset(0x54E)]
     public Sequence* _7;
 
     [FieldOffset(0x564)]
