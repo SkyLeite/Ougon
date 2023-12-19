@@ -9,7 +9,8 @@ public unsafe delegate void TickMatch(Match* match, char param_1);
 
 class TickMatchHook : IHook<TickMatch>
 {
-    public TickMatchHook(IReloadedHooks hooks, Context context) : base(hooks)
+    public TickMatchHook(IReloadedHooks hooks, Context context)
+        : base(hooks)
     {
         this.Context = context;
     }

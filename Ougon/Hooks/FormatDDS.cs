@@ -9,7 +9,8 @@ public unsafe delegate byte* FormatDDS(int* LZLRFile, byte* outBuffer);
 
 class FormatDDSHook : IHook<FormatDDS>
 {
-    public FormatDDSHook(IReloadedHooks hooks, Context context) : base(hooks)
+    public FormatDDSHook(IReloadedHooks hooks, Context context)
+        : base(hooks)
     {
         this.Context = context;
     }

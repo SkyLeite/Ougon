@@ -1,6 +1,7 @@
 namespace Ougon.Hooks;
 
-class HookService {
+class HookService
+{
     public RenderHook Render;
     public EndSceneHook EndScene;
     public LoadCharactersHook LoadCharacters;
@@ -19,7 +20,8 @@ class HookService {
         TickMatchHook tickMatch,
         FormatDDSHook formatDDS,
         PlaySequenceHook playSequence
-    ) {
+    )
+    {
         this.Render = render;
         this.EndScene = endScene;
         this.LoadCharacters = loadCharacters;
@@ -30,8 +32,8 @@ class HookService {
         this.PlaySequence = playSequence;
     }
 
-
-    public void Enable() {
+    public void Enable()
+    {
         this.Render.Enable();
         this.EndScene.Enable();
         this.LoadCharacters.Enable();
@@ -42,7 +44,8 @@ class HookService {
         this.PlaySequence.Enable();
     }
 
-    public void Disable() {
+    public void Disable()
+    {
         this.Render.Disable();
         this.EndScene.Disable();
         this.LoadCharacters.Disable();

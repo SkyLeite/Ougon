@@ -9,13 +9,15 @@ public unsafe delegate void LoadCharacters(byte* param_1, void* param_2, int* pa
 
 class LoadCharactersHook : IHook<LoadCharacters>
 {
-    public LoadCharactersHook(IReloadedHooks hooks, Context context, ILogger logger) : base(hooks)
+    public LoadCharactersHook(IReloadedHooks hooks, Context context, ILogger logger)
+        : base(hooks)
     {
         this.Context = context;
         this.Logger = logger;
     }
 
-    public override string SignatureBytes => "55 8B EC 81 EC 90 00 00 00 A1 ?? ?? ?? ?? 33 C5 89 45 ?? 8B 45";
+    public override string SignatureBytes =>
+        "55 8B EC 81 EC 90 00 00 00 A1 ?? ?? ?? ?? 33 C5 89 45 ?? 8B 45";
     public override unsafe LoadCharacters Hook => this.LoadCharacters;
 
     private readonly Context Context;

@@ -8,7 +8,9 @@ public delegate void Render();
 
 class RenderHook : IHook<Render>
 {
-    public RenderHook(Reloaded.Hooks.Definitions.IReloadedHooks hooks, Config config) : base(hooks) {
+    public RenderHook(Reloaded.Hooks.Definitions.IReloadedHooks hooks, Config config)
+        : base(hooks)
+    {
         this.Config = config;
     }
 

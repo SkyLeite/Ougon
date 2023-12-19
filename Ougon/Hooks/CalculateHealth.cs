@@ -10,7 +10,8 @@ public unsafe delegate void CalculateHealth(Something* _this, int param_1);
 
 class CalculateHealthHook : IHook<CalculateHealth>
 {
-    public CalculateHealthHook(IReloadedHooks hooks, ILogger logger) : base(hooks)
+    public CalculateHealthHook(IReloadedHooks hooks, ILogger logger)
+        : base(hooks)
     {
         this.Logger = logger;
     }

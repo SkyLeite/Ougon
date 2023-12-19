@@ -4,7 +4,8 @@ using Reloaded.Memory.Sigscan;
 
 namespace Ougon.Hooks;
 
-abstract class IHook<TFunction>  {
+abstract class IHook<TFunction>
+{
     public abstract string SignatureBytes { get; }
     public abstract TFunction Hook { get; }
 
@@ -12,20 +13,24 @@ abstract class IHook<TFunction>  {
 
     public IReloadedHooks Hooks { get; set; }
 
-    protected IHook(IReloadedHooks hooks) {
+    protected IHook(IReloadedHooks hooks)
+    {
         this.Hooks = hooks;
         this.OriginalHook = this.CreateHook();
     }
 
-    public void Enable() {
+    public void Enable()
+    {
         this.OriginalHook.Enable();
     }
 
-    public void Disable() {
+    public void Disable()
+    {
         this.OriginalHook.Disable();
     }
 
-    public unsafe Reloaded.Hooks.Definitions.IHook<TFunction> CreateHook() {
+    public unsafe Reloaded.Hooks.Definitions.IHook<TFunction> CreateHook()
+    {
         var thisProcess = Process.GetCurrentProcess();
         if (thisProcess.MainModule == null)
             throw new Exception("Could not find the process' main module");

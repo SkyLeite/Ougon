@@ -9,7 +9,8 @@ class Module : NinjectModule
 {
     private readonly ModContext modContext;
 
-    public Module(ModContext modContext) {
+    public Module(ModContext modContext)
+    {
         this.modContext = modContext;
     }
 

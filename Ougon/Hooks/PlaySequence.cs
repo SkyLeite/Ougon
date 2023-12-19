@@ -14,7 +14,8 @@ public unsafe delegate void PlaySequence(
 
 class PlaySequenceHook : IHook<PlaySequence>
 {
-    public PlaySequenceHook(IReloadedHooks hooks, Context context) : base(hooks)
+    public PlaySequenceHook(IReloadedHooks hooks, Context context)
+        : base(hooks)
     {
         this.Context = context;
     }
