@@ -1,0 +1,21 @@
+name: Format and Lint
+
+on:
+  push:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '3.1.x'
+      - name: Restore projects
+        run: dotnet restore
+
+      - name: Install Dotnet tools
+        run: dotnet tool restore
+
+      - name: Run formatter (CSharpier)
+        run: dotnet sln list | tail -n +3 | xargs dirname | xargs dotnet csharpier --check
