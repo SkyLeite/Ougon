@@ -19,6 +19,12 @@
           "System.Runtime.CompilerServices.Unsafe": "4.4.0"
         }
       },
+      "Ninject": {
+        "type": "Direct",
+        "requested": "[4.0.0-beta.1, )",
+        "resolved": "4.0.0-beta.1",
+        "contentHash": "nLUSEPhzXRYrw5PKB6wQIOTWN2dgvlvjjzr1QaQC1Bq8J/ca2wKdURoUWwFwAuQjG4hxP7aEeBscmPCF/OgYBQ=="
+      },
       "Reloaded.Imgui.Hook": {
         "type": "Direct",
         "requested": "[4.0.1, )",
