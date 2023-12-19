@@ -28,6 +28,10 @@ A mod for the Steam version of Umineko: Golden Fantasia (also known as Ougon Mus
 1. Set the environment variable `RELOADEDIIMODS` to your Reloaded-II `Mods` directory
 2. Run `dotnet build`
 
+## Releasing
+
+To release a new version, update the `ModVersion` field in `Ougon/ModConfig.json` and create a new git tag. Once those are pushed to `main`, Github Actions will build and release the new version.
+
 ## Features
 
 The following is a list of my goals with this mod, in no particular order. Some of them might not even be possible, so don't hold your breath.
