@@ -1,6 +1,5 @@
 using System.Numerics;
 using DearImguiSharp;
-using Ougon;
 using Ougon.Data;
 using Reloaded.Hooks.Definitions;
 using Reloaded.Imgui.Hook;
@@ -12,25 +11,27 @@ namespace Ougon.GUI
 {
     class Debug
     {
-        private unsafe GameState* _gameState;
-        public Context _context;
-        private readonly IReloadedHooks? _hooks;
+        public bool isActive = false;
+        private Hooks.HookService hooks;
+        private readonly IReloadedHooks reloadedHooks;
+        public Context context;
         Vector2 initialPosition = new Vector2(0, 0);
         Vector2 hitboxPositionMax = new Vector2(0, 0);
         bool showHitboxes = false;
 
-        public unsafe Debug(IReloadedHooks hooks, GameState* gameState, Context context)
+        public unsafe Debug(Hooks.HookService hooks, IReloadedHooks reloadedHooks, Context context)
         {
-            _gameState = gameState;
-            _hooks = hooks;
-            _context = context;
+            this.hooks = hooks;
+            this.context = context;
+            this.reloadedHooks = reloadedHooks;
 
-            this.InitializeImgui().Wait();
+            InitializeImgui();
         }
 
-        private async Task InitializeImgui()
+        public async Task InitializeImgui()
         {
-            SDK.Init(_hooks);
+            this.isActive = true;
+            SDK.Init(this.reloadedHooks);
 
             await ImguiHook
                 .Create(
@@ -75,10 +76,10 @@ namespace Ougon.GUI
                 character->absolutePositionY
             );
 
-            hitbox.x = (short)(hitbox.x * _context.match->cameraZoomFactor);
-            hitbox.y = (short)(hitbox.y * _context.match->cameraZoomFactor);
-            hitbox.w = (short)(hitbox.w * _context.match->cameraZoomFactor);
-            hitbox.h = (short)(hitbox.h * _context.match->cameraZoomFactor);
+            hitbox.x = (short)(hitbox.x * context.match->cameraZoomFactor);
+            hitbox.y = (short)(hitbox.y * context.match->cameraZoomFactor);
+            hitbox.w = (short)(hitbox.w * context.match->cameraZoomFactor);
+            hitbox.h = (short)(hitbox.h * context.match->cameraZoomFactor);
 
             if (character->isLeftSide)
             {
@@ -122,8 +123,8 @@ namespace Ougon.GUI
         {
             var player = playerIndex switch
             {
-                1 => _context.fight?.player1,
-                2 => _context.fight?.player2,
+                1 => context.fight?.player1,
+                2 => context.fight?.player2,
                 _ => null
             };
 
@@ -486,14 +487,7 @@ namespace Ougon.GUI
                 if (ImGui.Button("Run", buttonSize))
                 {
                     var sequenceIndex = GameCharacter.GetSequenceIndex(character, sequenceStr);
-                    if (_context.mod != null)
-                    {
-                        _context.mod.MyPlaySequence(character, sequenceIndex, 13, 0);
-                    }
-                    else
-                    {
-                        Console.WriteLine("MOD IS NULL LOL");
-                    }
+                    this.hooks.PlaySequence.Hook(character, sequenceIndex, 13, 0);
                 }
 
                 foreach (var frame in sequence->frames())
@@ -579,17 +573,17 @@ namespace Ougon.GUI
 
             if (ImGui.CollapsingHeaderBoolPtr("General", ref isDefaultOpen, 0))
             {
-                ImGui.Text($"FPS: {_gameState->fps.ToString("0.##")}");
+                ImGui.Text($"FPS: {this.context.gameState->fps.ToString("0.##")}");
             }
 
-            if (_context.match != null && _context.match->isValid())
+            if (context.match != null && context.match->isValid())
             {
                 ImGui.Checkbox("Show hitboxes", ref this.showHitboxes);
 
                 if (this.showHitboxes)
                 {
-                    var p1Characters = _context.match->player1Characters();
-                    var p2Characters = _context.match->player2Characters();
+                    var p1Characters = context.match->player1Characters();
+                    var p2Characters = context.match->player2Characters();
 
                     foreach (GameCharacter* character in p1Characters)
                     {
@@ -618,23 +612,23 @@ namespace Ougon.GUI
 
                 if (ImGui.CollapsingHeaderBoolPtr("Current Match", ref isDefaultOpen, 0))
                 {
-                    RenderPointer("Match:", _context.match);
-                    ImGui.Text($"Camera Position: {_context.match->cameraPositionX}");
-                    ImGui.Text($"Camera Zoom: {_context.match->cameraZoomFactor}");
+                    RenderPointer("Match:", context.match);
+                    ImGui.Text($"Camera Position: {context.match->cameraPositionX}");
+                    ImGui.Text($"Camera Zoom: {context.match->cameraZoomFactor}");
 
                     {
                         ImGui.BeginGroup();
-                        ImGui.SliderInt("Timer", ref _context.match->timer, 0, 10800, "", 0);
+                        ImGui.SliderInt("Timer", ref context.match->timer, 0, 10800, "", 0);
                         ImGui.SameLine(0, 0);
-                        ImGui.Checkbox("Lock", ref _context.timerLocked);
+                        ImGui.Checkbox("Lock", ref context.timerLocked);
                         ImGui.EndGroup();
                     }
 
                     ImGui.Separator();
 
-                    RenderPlayer(1, _context.match->player1Characters());
+                    RenderPlayer(1, context.match->player1Characters());
                     ImGui.Separator();
-                    RenderPlayer(2, _context.match->player2Characters());
+                    RenderPlayer(2, context.match->player2Characters());
                 }
             }
 
