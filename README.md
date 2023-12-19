@@ -23,6 +23,10 @@ A mod for the Steam version of Umineko: Golden Fantasia (also known as Ougon Mus
 8. If you see a minus (`-`) sign next to Ougon in the mods list, click it to make it a `+`
 9. You're done! Click `Launch Application` to play. Note: you will have to launch the game through Reloaded-II every time you want to play with the mod enabled
 
+## Building
+
+1. Set the environment variable `RELOADEDIIMODS` to your Reloaded-II `Mods` directory
+2. Run `dotnet build`
 
 ## Features
 
