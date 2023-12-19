@@ -167,14 +167,7 @@ sealed class Debug
                         "%.3f",
                         0
                     );
-                    ImGui.InputFloat(
-                        $"Stun",
-                        ref character->inMatch->stun,
-                        0.0f,
-                        0.0f,
-                        "%.3f",
-                        0
-                    );
+                    ImGui.InputFloat($"Stun", ref character->inMatch->stun, 0.0f, 0.0f, "%.3f", 0);
 
                     ImGui.InputFloat(
                         $"Position X",
@@ -219,12 +212,7 @@ sealed class Debug
                         RenderSequence("Backdash", character, character->_44, "_44");
 
                         RenderSequence("Grab", character, character->grab, "grab");
-                        RenderSequence(
-                            "Grab Whiff",
-                            character,
-                            character->grabWhiff,
-                            "grabWhiff"
-                        );
+                        RenderSequence("Grab Whiff", character, character->grabWhiff, "grabWhiff");
 
                         RenderSequence("Call tag", character, character->callTag, "callTag");
                         RenderSequence("Tag out", character, character->tagOut, "tagOut");
@@ -232,12 +220,7 @@ sealed class Debug
                         if (ImGui.TreeNodeStr("A"))
                         {
                             RenderSequence("Far 5A", character, character->far5A, "far5A");
-                            RenderSequence(
-                                "Close 5A",
-                                character,
-                                character->close5A,
-                                "close5A"
-                            );
+                            RenderSequence("Close 5A", character, character->close5A, "close5A");
                             RenderSequence("2A", character, character->_2A, "_2A");
                             RenderSequence("8A", character, character->j8A, "j8A");
                             RenderSequence("9A", character, character->j9A, "j9A");
@@ -248,12 +231,7 @@ sealed class Debug
                         if (ImGui.TreeNodeStr("B"))
                         {
                             RenderSequence("Far 5B", character, character->far5B, "far5B");
-                            RenderSequence(
-                                "Close 5B",
-                                character,
-                                character->close5B,
-                                "close5B"
-                            );
+                            RenderSequence("Close 5B", character, character->close5B, "close5B");
                             RenderSequence("6B", character, character->_6B, "_6B");
                             RenderSequence("2B", character, character->_2B, "_2B");
                             RenderSequence("8B", character, character->j8B, "j8B");
@@ -265,12 +243,7 @@ sealed class Debug
                         if (ImGui.TreeNodeStr("C"))
                         {
                             RenderSequence("Far 5C", character, character->far5C, "far5C");
-                            RenderSequence(
-                                "Close 5C",
-                                character,
-                                character->close5C,
-                                "close5C"
-                            );
+                            RenderSequence("Close 5C", character, character->close5C, "close5C");
                             RenderSequence("6C", character, character->_6C, "_6C");
                             RenderSequence("2C", character, character->_2C, "_2C");
                             RenderSequence("8C", character, character->j8C, "j8C");
@@ -407,19 +380,15 @@ sealed class Debug
                             character->metaDeclare,
                             "metaDeclare"
                         );
-                        RenderSequence(
-                            "Meta Super",
-                            character,
-                            character->metaSuper,
-                            "metaSuper"
-                        );
+                        RenderSequence("Meta Super", character, character->metaSuper, "metaSuper");
 
                         ImGui.TreePop();
                     }
 
                     if (ImGui.TreeNodeStr("Animation history"))
                     {
-                        using (var buttonSize = new ImVec2()) {
+                        using (var buttonSize = new ImVec2())
+                        {
                             buttonSize.X = 100;
                             buttonSize.Y = 20;
                             if (ImGui.Button("Clear", buttonSize))
@@ -428,7 +397,8 @@ sealed class Debug
                             }
                         }
 
-                        using (ImVec2 available = new ImVec2()) {
+                        using (ImVec2 available = new ImVec2())
+                        {
                             ImGui.GetContentRegionAvail(available);
                             available.Y = 100;
 
@@ -463,14 +433,16 @@ sealed class Debug
     {
         var address = new IntPtr(pointer).ToString("x");
         var displayString = $"{label} 0x{new IntPtr(pointer).ToString("x")}";
-        using (var size = new ImVec2()) {
+        using (var size = new ImVec2())
+        {
             size.X = 100;
             size.Y = 20;
             if (ImGui.Button(displayString, size))
             {
                 ClipboardService.SetTextAsync(address);
             }
-        };
+        }
+        ;
     }
 
     private unsafe void RenderSequence(
@@ -485,7 +457,8 @@ sealed class Debug
             RenderPointer("", sequence);
             var frameI = 0;
 
-            using (var buttonSize = new ImVec2()) {
+            using (var buttonSize = new ImVec2())
+            {
                 buttonSize.X = 100;
                 buttonSize.Y = 20;
                 if (ImGui.Button("Run", buttonSize))
@@ -493,7 +466,8 @@ sealed class Debug
                     var sequenceIndex = GameCharacter.GetSequenceIndex(character, sequenceStr);
                     this.hooks.PlaySequence.Hook(character, sequenceIndex, 13, 0);
                 }
-            };
+            }
+            ;
 
             foreach (var frame in sequence->frames())
             {
@@ -557,11 +531,13 @@ sealed class Debug
         bool isDefaultOpen2 = true;
         ImGui.Begin("Debug", ref isDefaultOpen, 0);
 
-        using (var defaultWindowSize = new ImVec2()) {
+        using (var defaultWindowSize = new ImVec2())
+        {
             defaultWindowSize.X = 300;
             defaultWindowSize.Y = 400;
             ImGui.SetWindowSizeVec2(defaultWindowSize, (int)ImGuiCond.FirstUseEver);
-        };
+        }
+        ;
 
         ImGui.ShowDemoWindow(ref isDefaultOpen2);
 

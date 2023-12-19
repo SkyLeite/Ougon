@@ -107,15 +107,18 @@ settings.Encoding = System.Text.Encoding.ASCII;
 settings.NewLineChars = "\r\n";
 
 var destinationFile = cheatTablePath + ".new.CT";
-using(var writer = XmlWriter.Create(destinationFile, settings)) {
+using (var writer = XmlWriter.Create(destinationFile, settings))
+{
     ct.WriteTo(writer);
     writer.Flush();
-};
+}
+;
 
 // Cheat tables must be encoded as ASCII, but the encoding must be declared as UTF-8
 // No, this is not a joke
 // Yes, I lost many hours to this
-var ruinedFile = File.ReadAllText(destinationFile).Replace("us-ascii", "utf-8", System.StringComparison.CurrentCultureIgnoreCase);
+var ruinedFile = File.ReadAllText(destinationFile)
+    .Replace("us-ascii", "utf-8", System.StringComparison.CurrentCultureIgnoreCase);
 File.WriteAllText(destinationFile, ruinedFile);
 
 return 0;
