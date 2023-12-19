@@ -26,7 +26,8 @@ var ougonStructures = new List<Type>
     typeof(SpriteInfo),
     typeof(SequenceHeader),
     typeof(LZLRFile),
-    typeof(GameCharacterInMatch)
+    typeof(GameCharacterInMatch),
+    typeof(Game)
 };
 
 foreach (var structure in ougonStructures)

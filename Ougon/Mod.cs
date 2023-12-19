@@ -46,8 +46,6 @@ namespace Ougon
         /// </summary>
         private readonly IModConfig _modConfig;
 
-        private unsafe GameState* _gameState;
-
         [Function(CallingConventions.Fastcall)]
         public unsafe delegate void LoadMoves(bool* character);
         private IHook<LoadMoves> _loadMovesHook;
@@ -89,11 +87,16 @@ namespace Ougon
         );
         private IHook<PlaySequence> _playSequenceHook;
 
+        [Function(CallingConventions.Stdcall)]
+        public unsafe delegate void InitOugonStruct(int HINSTANCE, int arg2, int arg3);
+        private IHook<InitOugonStruct> _initOugonStructHook;
+
         private double FrameInterval; // Time per frame in milliseconds
         private nuint BaseAddress;
         private nint _setTimerAddress;
         private Ougon.GUI.Debug? _gui;
         private Context _context;
+        private nint _baseAddress;
 
         // AttackType:
         // 0 = normal hit
@@ -174,10 +177,19 @@ namespace Ougon
 
         public unsafe void MyEndScene()
         {
-            var str = (GameState**)(BaseAddress + 0xf17f8);
-            this._gameState = *str;
+            if (this._context.game == null) {
+                this._context.game = *(Game**)(BaseAddress + 0xf17f8);
+            }
 
-            new Ougon.GUI.Debug(_hooks, _gameState, _context);
+            new Ougon.GUI.Debug(_hooks, _context);
+
+            if (this._context.viewport != null) {
+                var device = _context.game->GetDevice();
+
+                var newViewport = new SharpDX.Mathematics.Interop.RawViewport { X = 0, Y = 0, Width = 1920, Height = 1080, MinDepth = 0.0f, MaxDepth = 1.0f };
+                device.Viewport = newViewport;
+                _logger.WriteLine("Viewport set!");
+            }
 
             _endSceneHook.OriginalFunction();
         }
@@ -209,15 +221,15 @@ namespace Ougon
             if (thisProcess.MainModule == null)
                 throw new Exception("Could not find the process' main module");
 
-            var baseAddress = thisProcess.MainModule.BaseAddress;
+            _baseAddress = thisProcess.MainModule.BaseAddress;
             var exeSize = thisProcess.MainModule.ModuleMemorySize;
-            this.BaseAddress = (nuint)baseAddress;
+            this.BaseAddress = (nuint)_baseAddress;
 
-            using var scanner = new Scanner((byte*)baseAddress, exeSize);
+            using var scanner = new Scanner((byte*)_baseAddress, exeSize);
 
             var result = scanner.FindPattern("55 8B EC 83 EC 2C A1 ?? ?? ?? ?? 33 C5 89 45 ?? 53");
 
-            var renderPointer = baseAddress + result.Offset;
+            var renderPointer = _baseAddress + result.Offset;
             if (!result.Found)
                 throw new Exception("Signature for getting Render not found.");
 
@@ -230,7 +242,8 @@ namespace Ougon
             if (!endSceneResult.Found)
                 throw new Exception("EndScene not found");
 
-            var endScenePointer = baseAddress + endSceneResult.Offset;
+            var endScenePointer = _baseAddress + endSceneResult.Offset;
+            _logger.WriteLine($"EndSceneAddr {((IntPtr)endScenePointer).ToString("X")}");
             _endSceneHook = _hooks
                 .CreateHook<EndScene>(MyEndScene, (long)endScenePointer)
                 .Activate();
@@ -241,7 +254,7 @@ namespace Ougon
             if (!loadCharactersResult.Found)
                 throw new Exception("LoadCharacters not found");
 
-            var loadCharactersPointer = baseAddress + loadCharactersResult.Offset;
+            var loadCharactersPointer = _baseAddress + loadCharactersResult.Offset;
             _loadCharactersHook = _hooks
                 .CreateHook<LoadCharacters>(MyLoadCharacters, (long)loadCharactersPointer)
                 .Activate();
@@ -252,14 +265,14 @@ namespace Ougon
             if (!debugResult.Found)
                 throw new Exception("Debug not found");
 
-            var debugPointer = baseAddress + debugResult.Offset;
+            var debugPointer = _baseAddress + debugResult.Offset;
             _debugHook = _hooks.CreateHook<Debug>(MyDebug, (long)debugPointer).Activate();
 
             var calculateHealthHook = scanner.FindPattern("55 8B EC 8B 45 ?? 53 56 57 8B F9 8B 8F");
             if (!calculateHealthHook.Found)
                 throw new Exception("CalculateHealth not found");
 
-            var calculateHealthPointer = baseAddress + calculateHealthHook.Offset;
+            var calculateHealthPointer = _baseAddress + calculateHealthHook.Offset;
             _calculateHealthHook = _hooks
                 .CreateHook<CalculateHealth>(MyCalculateHealth, (long)calculateHealthPointer)
                 .Activate();
@@ -268,7 +281,7 @@ namespace Ougon
             if (!tickMatchHook.Found)
                 throw new Exception("TickMatch not found");
 
-            var tickMatchPointer = baseAddress + tickMatchHook.Offset;
+            var tickMatchPointer = _baseAddress + tickMatchHook.Offset;
             _tickMatchHook = _hooks
                 .CreateHook<TickMatch>(MyTickMatch, (long)tickMatchPointer)
                 .Activate();
@@ -277,7 +290,7 @@ namespace Ougon
             if (!formatDDSHook.Found)
                 throw new Exception("FormatDDS Not Found");
 
-            var formatDDSPointer = baseAddress + formatDDSHook.Offset;
+            var formatDDSPointer = _baseAddress + formatDDSHook.Offset;
             _formatDDSHook = _hooks
                 .CreateHook<FormatDDS>(MyFormatDDS, (long)formatDDSPointer)
                 .Activate();
@@ -286,12 +299,27 @@ namespace Ougon
             if (!playSequenceHook.Found)
                 throw new Exception("Playsequence Not Found");
 
-            var playSequencePointer = baseAddress + playSequenceHook.Offset;
+            var playSequencePointer = _baseAddress + playSequenceHook.Offset;
             _playSequenceHook = _hooks
                 .CreateHook<PlaySequence>(MyPlaySequence, (long)playSequencePointer)
                 .Activate();
 
+            // 55 8B EC B8 ? ? ? ? E8 ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 8B 45 ?
+            var initOugonStructHook = scanner.FindPattern("55 8B EC B8 ?? ?? ?? ?? E8 ?? ?? ?? ?? A1 ?? ?? ?? ?? 33 C5 89 45 FC 8B 45 ??");
+            if (!initOugonStructHook.Found)
+                throw new Exception("InitOugonStruct Not Found");
+
+            var initOugonStructPointer = _baseAddress + initOugonStructHook.Offset;
+            _initOugonStructHook = _hooks
+                .CreateHook<InitOugonStruct>(MyInitOugonStruct, (long)initOugonStructPointer)
+                .Activate();
+
             _context.mod = this;
+        }
+
+        public unsafe void MyInitOugonStruct(int HINSTANCE, int arg2, int arg3) {
+            _initOugonStructHook.OriginalFunction(HINSTANCE, arg2, arg3);
+
         }
 
         public unsafe void MyPlaySequence(

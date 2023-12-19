@@ -70,6 +70,25 @@
           "Reloaded.Hooks.Definitions": "1.11.0"
         }
       },
+      "SharpDX": {
+        "type": "Direct",
+        "requested": "[4.2.0, )",
+        "resolved": "4.2.0",
+        "contentHash": "3pv0LFMvfK/dv1qISJnn8xBeeT6R/FRvr0EV4KI2DGsL84Qlv6P7isWqxGyU0LCwlSVCJN3jgHJ4Bl0KI2PJww==",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1"
+        }
+      },
+      "SharpDX.Direct3D9": {
+        "type": "Direct",
+        "requested": "[4.2.0, )",
+        "resolved": "4.2.0",
+        "contentHash": "1KgqXvPj/j5hLYxfcOQoJdHskamu7EWg60n9LBAYhun7dR+sKS0ZDNb7NuKwFP1bM0HZqvokjXQIf3oA2NpdqA==",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1",
+          "SharpDX": "4.2.0"
+        }
+      },
       "TextCopy": {
         "type": "Direct",
         "requested": "[6.2.1, )",
@@ -271,23 +290,6 @@
         "type": "Transitive",
         "resolved": "4.3.0",
         "contentHash": "VB5cn/7OzUfzdnC8tqAIMQciVLiq2epm2NrAm1E9OjNRyG4lVhfR61SMcLizejzQP8R8Uf/0l5qOIbUEi+RdEg=="
-      },
-      "SharpDX": {
-        "type": "Transitive",
-        "resolved": "4.2.0",
-        "contentHash": "3pv0LFMvfK/dv1qISJnn8xBeeT6R/FRvr0EV4KI2DGsL84Qlv6P7isWqxGyU0LCwlSVCJN3jgHJ4Bl0KI2PJww==",
-        "dependencies": {
-          "NETStandard.Library": "1.6.1"
-        }
-      },
-      "SharpDX.Direct3D9": {
-        "type": "Transitive",
-        "resolved": "4.2.0",
-        "contentHash": "1KgqXvPj/j5hLYxfcOQoJdHskamu7EWg60n9LBAYhun7dR+sKS0ZDNb7NuKwFP1bM0HZqvokjXQIf3oA2NpdqA==",
-        "dependencies": {
-          "NETStandard.Library": "1.6.1",
-          "SharpDX": "4.2.0"
-        }
       },
       "System.AppContext": {
         "type": "Transitive",
@@ -1013,7 +1015,11 @@
         }
       },
       "ougon.data": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "SharpDX": "[4.2.0, )",
+          "SharpDX.Direct3D9": "[4.2.0, )"
+        }
       }
     }
   }

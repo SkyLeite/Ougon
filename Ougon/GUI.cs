@@ -1,10 +1,12 @@
 using System.Numerics;
 using DearImguiSharp;
 using Ougon;
+using SharpDX.Mathematics;
 using Ougon.Data;
 using Reloaded.Hooks.Definitions;
 using Reloaded.Imgui.Hook;
 using Reloaded.Imgui.Hook.Implementations;
+using SharpDX.Direct3D9;
 using TextCopy;
 using igNET = ImGuiNET;
 
@@ -12,16 +14,14 @@ namespace Ougon.GUI
 {
     class Debug
     {
-        private unsafe GameState* _gameState;
         public Context _context;
         private readonly IReloadedHooks? _hooks;
         Vector2 initialPosition = new Vector2(0, 0);
         Vector2 hitboxPositionMax = new Vector2(0, 0);
         bool showHitboxes = false;
 
-        public unsafe Debug(IReloadedHooks hooks, GameState* gameState, Context context)
+        public unsafe Debug(IReloadedHooks hooks, Context context)
         {
-            _gameState = gameState;
             _hooks = hooks;
             _context = context;
 
@@ -579,7 +579,41 @@ namespace Ougon.GUI
 
             if (ImGui.CollapsingHeaderBoolPtr("General", ref isDefaultOpen, 0))
             {
-                ImGui.Text($"FPS: {_gameState->fps.ToString("0.##")}");
+                ImGui.Text($"FPS: {_context.game->fps.ToString("0.##")}");
+
+                var device = _context.game->GetDevice();
+                var displayMode = device.GetDisplayMode(0);
+                ImGui.Text($"Viewport: {device.Viewport.Width}x{device.Viewport.Height}");
+
+                var size = new ImVec2();
+                size.X = 100;
+                size.Y = 20;
+                if (ImGui.Button("Reset", size)) {
+                    var newViewport = new SharpDX.Mathematics.Interop.RawViewport { X = 0, Y = 0, Width = 1920, Height = 1080, MinDepth = 0.0f, MaxDepth = 1.0f };
+                    // device.Viewport = newViewport;
+
+                    // _context.game->DX9Device = (int*)device.NativePointer;
+
+                    _context.viewport = newViewport;
+
+                    var presentParams = new SharpDX.Direct3D9.PresentParameters();
+                    presentParams.InitDefaults();
+                    presentParams.BackBufferCount = 1;
+                    presentParams.EnableAutoDepthStencil = true;
+                    presentParams.AutoDepthStencilFormat = Format.D24S8;
+                    presentParams.MultiSampleType = MultisampleType.None;
+                    presentParams.SwapEffect = SwapEffect.Discard;
+                    presentParams.PresentationInterval = PresentInterval.One;
+                    presentParams.BackBufferWidth = 1920;
+                    presentParams.BackBufferHeight = 1080;
+                    presentParams.DeviceWindowHandle = (IntPtr)_context.game->windowHandle;
+                    presentParams.FullScreenRefreshRateInHz = 60;
+                    presentParams.Windowed = false;
+                    presentParams.BackBufferFormat = Format.A8R8G8B8;
+                    presentParams.PresentFlags = 0;
+
+                    device.Reset(presentParams);
+                }
             }
 
             if (_context.match != null && _context.match->isValid())
