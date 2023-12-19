@@ -22,13 +22,6 @@
 
         devShell = pkgs.devshell.mkShell {
           imports = [ (pkgs.devshell.importTOML ./devshell.toml) ];
-
-          env = [{
-            name = "DOTNET_ROOT";
-            value =
-              "/nix/store/f0xrdhmving7afl5kz16bc4xyzj56b45-dotnet-sdk-7.0.306";
-          }];
         };
-
       });
 }
