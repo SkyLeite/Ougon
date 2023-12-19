@@ -6,7 +6,7 @@ namespace Ougon.Hooks;
 [Function(CallingConventions.Stdcall)]
 public delegate void Render();
 
-class RenderHook : IHook<Render>
+sealed class RenderHook : IHook<Render>
 {
     public RenderHook(Reloaded.Hooks.Definitions.IReloadedHooks hooks, Config config)
         : base(hooks)

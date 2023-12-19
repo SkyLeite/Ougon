@@ -2,7 +2,7 @@
 
 namespace Ougon.Template.Configuration
 {
-    public class Utilities
+    public static class Utilities
     {
         /// <param name="getValue">Function that retrieves the value.</param>
         /// <param name="timeout">The timeout in milliseconds.</param>
@@ -17,6 +17,9 @@ namespace Ougon.Template.Configuration
         )
             where T : new()
         {
+            if (getValue == null)
+                throw new NullReferenceException("getValue is null");
+
             Stopwatch watch = new Stopwatch();
             watch.Start();
             bool valueSet = false;

@@ -229,14 +229,14 @@ public unsafe struct GameCharacter
         return (offset - 0x520) / 4;
     }
 
-    public static Sprite* GetSpriteFromID(GameCharacter* character, ushort sprite_id)
+    public static Sprite* GetSpriteFromID(GameCharacter* character, ushort spriteId)
     {
         var spriteArray = new IntPtr(character->sprites);
-        var spriteOffset = sprite_id * 4;
+        var spriteOffset = spriteId * 4;
         var spriteAddr = (Sprite**)IntPtr.Add(spriteArray, spriteOffset);
 
         Console.WriteLine(
-            $"id: {sprite_id} arr: {spriteArray.ToString("x")} offset: {spriteOffset} {spriteOffset.ToString("x")} Sprite addres: {new IntPtr(spriteAddr).ToString("x")}"
+            $"id: {spriteId} arr: {spriteArray.ToString("x")} offset: {spriteOffset} {spriteOffset.ToString("x")} Sprite addres: {new IntPtr(spriteAddr).ToString("x")}"
         );
 
         return *spriteAddr;

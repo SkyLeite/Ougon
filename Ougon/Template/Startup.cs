@@ -48,10 +48,10 @@ namespace Ougon.Template
         /// <summary>
         /// Entry point for your mod.
         /// </summary>
-        public void StartEx(IModLoaderV1 loaderApi, IModConfigV1 modConfig)
+        public void StartEx(IModLoaderV1 loader, IModConfigV1 config)
         {
-            _modLoader = (IModLoader)loaderApi;
-            _modConfig = (IModConfig)modConfig;
+            _modLoader = (IModLoader)loader;
+            _modConfig = (IModConfig)config;
             _logger = (ILogger)_modLoader.GetLogger();
             _modLoader.GetController<IReloadedHooks>()?.TryGetTarget(out _hooks!);
 

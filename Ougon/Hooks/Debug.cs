@@ -6,9 +6,9 @@ using Reloaded.Mod.Interfaces;
 namespace Ougon.Hooks;
 
 [Function(CallingConventions.Cdecl)]
-public unsafe delegate void Debug(char* param_1, char* param2);
+public unsafe delegate void Debug(char* param1, char* param2);
 
-class DebugHook : IHook<Debug>
+sealed class DebugHook : IHook<Debug>
 {
     public DebugHook(IReloadedHooks hooks, ILogger logger)
         : base(hooks)
@@ -22,10 +22,10 @@ class DebugHook : IHook<Debug>
 
     private readonly ILogger Logger;
 
-    public unsafe void Debug(char* param_1, char* param_2)
+    public unsafe void Debug(char* param1, char* param2)
     {
         this.Logger.WriteLineAsync(
-            $"[MyDebug] param_1: {Marshal.PtrToStringAnsi((IntPtr)param_1) + Marshal.PtrToStringAnsi((IntPtr)param_2)}"
+            $"[MyDebug] param_1: {Marshal.PtrToStringAnsi((IntPtr)param1) + Marshal.PtrToStringAnsi((IntPtr)param2)}"
         );
     }
 }

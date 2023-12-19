@@ -5,9 +5,9 @@ using Reloaded.Hooks.Definitions.X86;
 namespace Ougon.Hooks;
 
 [Function(CallingConventions.MicrosoftThiscall)]
-public unsafe delegate void TickMatch(Match* match, char param_1);
+public unsafe delegate void TickMatch(Match* match, char param1);
 
-class TickMatchHook : IHook<TickMatch>
+sealed class TickMatchHook : IHook<TickMatch>
 {
     public TickMatchHook(IReloadedHooks hooks, Context context)
         : base(hooks)
@@ -20,10 +20,10 @@ class TickMatchHook : IHook<TickMatch>
 
     private readonly Context Context;
 
-    private unsafe void TickMatch(Match* match, char param_1)
+    private unsafe void TickMatch(Match* match, char param1)
     {
         this.Context.match = match;
-        this.OriginalHook.OriginalFunction(match, param_1);
+        this.OriginalHook.OriginalFunction(match, param1);
 
         if (this.Context.timerLocked == true)
         {

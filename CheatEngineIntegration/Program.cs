@@ -5,14 +5,10 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using Ougon.Data;
 
-// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
-
 var cheatTablePath = args.ElementAtOrDefault(0);
 if (cheatTablePath == null)
 {
-    Console.WriteLine("Must supply the path of a .CT file");
-    return 1;
+    throw new ArgumentNullException(cheatTablePath);
 }
 
 var ct = XDocument.Load(cheatTablePath);
@@ -58,7 +54,6 @@ foreach (var structure in ougonStructures)
 
         if (existingOffset != null)
         {
-            Console.WriteLine("Duplicate!!!!");
             continue;
         }
 
@@ -68,7 +63,6 @@ foreach (var structure in ougonStructures)
 
         if (existingDescription != null)
         {
-            Console.WriteLine("Duplicate!!!!");
             continue;
         }
 
@@ -85,7 +79,7 @@ foreach (var structure in ougonStructures)
         newStructureElementElements.Add(element);
     }
 
-    if (newStructureElementElements.Descendants().Count() < 1)
+    if (newStructureElementElements.Descendants().Any())
         continue;
 
     var newStructureElement = new XElement(
@@ -113,14 +107,15 @@ settings.Encoding = System.Text.Encoding.ASCII;
 settings.NewLineChars = "\r\n";
 
 var destinationFile = cheatTablePath + ".new.CT";
-var writer = XmlWriter.Create(destinationFile, settings);
-ct.WriteTo(writer);
-writer.Flush();
+using(var writer = XmlWriter.Create(destinationFile, settings)) {
+    ct.WriteTo(writer);
+    writer.Flush();
+};
 
 // Cheat tables must be encoded as ASCII, but the encoding must be declared as UTF-8
 // No, this is not a joke
 // Yes, I lost many hours to this
-var ruinedFile = File.ReadAllText(destinationFile).Replace("us-ascii", "utf-8");
+var ruinedFile = File.ReadAllText(destinationFile).Replace("us-ascii", "utf-8", System.StringComparison.CurrentCultureIgnoreCase);
 File.WriteAllText(destinationFile, ruinedFile);
 
 return 0;

@@ -5,7 +5,7 @@ namespace Ougon
         public byte id { get; set; }
         public string name { get; set; }
         public byte color { get; set; }
-        public HashSet<string> sequenceHistory { get; set; } = new HashSet<string>();
+        public HashSet<string> sequenceHistory { get; } = new HashSet<string>();
 
         public Character(byte id, string name, byte color)
         {

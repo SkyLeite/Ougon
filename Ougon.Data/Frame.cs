@@ -1,6 +1,16 @@
 namespace Ougon.Data;
 
 [StructLayout(LayoutKind.Sequential, Pack = 2, Size = 96)]
+public struct Attack
+{
+    public byte damage;
+    public byte prop1;
+    public ushort prop2;
+    public ushort prop3;
+    public ushort prop4;
+}
+
+[StructLayout(LayoutKind.Sequential, Pack = 2, Size = 96)]
 public struct Frame
 {
     public ushort sprite_id;
@@ -29,15 +39,6 @@ public struct Frame
     public ushort unknown1f;
     public ushort unknown20;
     public ushort unknown21;
-
-    public struct Attack
-    {
-        public byte damage;
-        public byte prop1;
-        public ushort prop2;
-        public ushort prop3;
-        public ushort prop4;
-    }
 
     public Attack attack;
 

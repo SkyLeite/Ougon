@@ -5,7 +5,7 @@ using Reloaded.Mod.Interfaces;
 
 namespace Ougon.DI;
 
-class Module : NinjectModule
+sealed class Module : NinjectModule
 {
     private readonly ModContext modContext;
 

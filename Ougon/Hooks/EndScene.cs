@@ -7,7 +7,7 @@ namespace Ougon.Hooks;
 [Function(CallingConventions.Stdcall)]
 public delegate void EndScene();
 
-class EndSceneHook : IHook<EndScene>
+sealed class EndSceneHook : IHook<EndScene>
 {
     public EndSceneHook(IReloadedHooks hooks, Context context)
         : base(hooks)

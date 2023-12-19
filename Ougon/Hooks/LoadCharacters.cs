@@ -5,9 +5,9 @@ using Reloaded.Mod.Interfaces;
 namespace Ougon.Hooks;
 
 [Function(CallingConventions.Cdecl)]
-public unsafe delegate void LoadCharacters(byte* param_1, void* param_2, int* param_3);
+public unsafe delegate void LoadCharacters(byte* param1, void* param2, int* param3);
 
-class LoadCharactersHook : IHook<LoadCharacters>
+sealed class LoadCharactersHook : IHook<LoadCharacters>
 {
     public LoadCharactersHook(IReloadedHooks hooks, Context context, ILogger logger)
         : base(hooks)
@@ -23,15 +23,15 @@ class LoadCharactersHook : IHook<LoadCharacters>
     private readonly Context Context;
     private readonly ILogger Logger;
 
-    public unsafe void LoadCharacters(byte* param_1, void* param_2, int* param_3)
+    public unsafe void LoadCharacters(byte* param1, void* param2, int* param3)
     {
-        var p = new IntPtr(param_2);
+        var p = new IntPtr(param2);
 
         this.Logger.WriteLineAsync(
-            $"[MyLoadCharacters] param1: {new IntPtr(param_1).ToString("x")} | param_2 address: {new IntPtr(param_2).ToString("x")} | param_3: {*param_3}"
+            $"[MyLoadCharacters] param1: {new IntPtr(param1).ToString("x")} | param_2 address: {new IntPtr(param2).ToString("x")} | param_3: {*param3}"
         );
 
-        var char1Pointer = param_1 + 0x40;
+        var char1Pointer = param1 + 0x40;
 
         // ushort[] characters = new[] { *char1Pointer, *(char1Pointer + 1), *(char1Pointer + 2), *(char1Pointer + 3) };
 
@@ -50,6 +50,6 @@ class LoadCharactersHook : IHook<LoadCharacters>
         var player2 = new Player(new List<Character> { characters[1], characters[3] });
         this.Context.fight = new Fight(player1, player2);
 
-        this.OriginalHook.OriginalFunction(param_1, param_2, param_3);
+        this.OriginalHook.OriginalFunction(param1, param2, param3);
     }
 }

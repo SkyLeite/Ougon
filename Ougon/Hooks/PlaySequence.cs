@@ -12,7 +12,7 @@ public unsafe delegate void PlaySequence(
     int zero
 );
 
-class PlaySequenceHook : IHook<PlaySequence>
+sealed class PlaySequenceHook : IHook<PlaySequence>
 {
     public PlaySequenceHook(IReloadedHooks hooks, Context context)
         : base(hooks)

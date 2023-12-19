@@ -1,6 +1,6 @@
 namespace Ougon.Hooks;
 
-class HookService
+sealed class HookService
 {
     public RenderHook Render;
     public EndSceneHook EndScene;

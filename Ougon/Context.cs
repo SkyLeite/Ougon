@@ -1,12 +1,11 @@
 using Ougon.Data;
 
-namespace Ougon
+namespace Ougon;
+
+sealed class Context
 {
-    class Context
-    {
-        public unsafe GameState* gameState { get; set; }
-        public unsafe Match* match { get; set; }
-        public bool timerLocked = false;
-        public Fight? fight;
-    }
+    public unsafe GameState* gameState { get; set; }
+    public unsafe Match* match { get; set; }
+    public bool timerLocked;
+    public Fight? fight;
 }

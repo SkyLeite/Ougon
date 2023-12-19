@@ -7,7 +7,7 @@ namespace Ougon.Hooks;
 [Function(CallingConventions.Cdecl)]
 public unsafe delegate byte* FormatDDS(int* LZLRFile, byte* outBuffer);
 
-class FormatDDSHook : IHook<FormatDDS>
+sealed class FormatDDSHook : IHook<FormatDDS>
 {
     public FormatDDSHook(IReloadedHooks hooks, Context context)
         : base(hooks)
