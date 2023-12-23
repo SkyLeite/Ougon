@@ -8,4 +8,5 @@ sealed class Context
     public unsafe Match* match { get; set; }
     public bool timerLocked;
     public Fight? fight;
+    public FrameHistory FrameHistory = new();
 }

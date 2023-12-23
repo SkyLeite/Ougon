@@ -1,6 +1,6 @@
 namespace Ougon.Data;
 
-[StructLayout(LayoutKind.Sequential, Pack = 2, Size = 96)]
+[StructLayout(LayoutKind.Sequential)]
 public struct Attack
 {
     public byte damage;
@@ -42,8 +42,9 @@ public struct Frame
 
     public Attack attack;
 
-    public ushort unknown26;
-    public ushort unknown27;
+    // If the following 2 values are 11 and 0 respectively, the move can be canceled into itself on whiff
+    public ushort canRapidFire1;
+    public ushort canRapidFire2;
     public ushort unknown28;
     public ushort unknown29;
     public ushort unknown2a;
@@ -52,4 +53,8 @@ public struct Frame
     public ushort unknown2d;
     public ushort unknown2e;
     public ushort unknown2f;
+
+    public bool isActive() {
+        return this.attackbox.w > 0 || this.attackbox.h > 0;
+    }
 }

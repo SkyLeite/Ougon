@@ -14,16 +14,18 @@ sealed class Debug
     public bool isActive;
     private Hooks.HookService hooks;
     private readonly IReloadedHooks reloadedHooks;
+    private readonly GUI.FrameData FrameData;
     public Context context;
     Vector2 initialPosition = new Vector2(0, 0);
     Vector2 hitboxPositionMax = new Vector2(0, 0);
     bool showHitboxes;
 
-    public unsafe Debug(Hooks.HookService hooks, IReloadedHooks reloadedHooks, Context context)
+    public unsafe Debug(Hooks.HookService hooks, IReloadedHooks reloadedHooks, Context context, FrameData frameData)
     {
         this.hooks = hooks;
         this.context = context;
         this.reloadedHooks = reloadedHooks;
+        this.FrameData = frameData;
 
         Task.Run(() => InitializeImgui());
     }
@@ -149,6 +151,11 @@ sealed class Debug
 
                 _character.AddToSequenceHistory((nint)character->currentSequence);
                 ImGui.Text($"CurrentFrameID: {character->currentFrame->sprite_id}");
+
+                var frameData = character->currentSequence->GetFrameData();
+                ImGui.Text($"Startup: {frameData.startup}");
+                ImGui.Text($"Active: {frameData.active}");
+                ImGui.Text($"Recovery: {frameData.recovery}");
 
                 var currentFrame = character->currentFrame;
 
@@ -469,13 +476,8 @@ sealed class Debug
             }
             ;
 
-            foreach (var frame in sequence->frames())
+            foreach (var frame in sequence->Frames())
             {
-                if (frame->duration < 1)
-                {
-                    continue;
-                }
-
                 if (ImGui.TreeNodePtr(frameI, $"Frame {frameI}"))
                 {
                     RenderPointer("", frame);
@@ -529,6 +531,9 @@ sealed class Debug
     {
         bool isDefaultOpen = true;
         bool isDefaultOpen2 = true;
+
+        FrameData.Render();
+
         ImGui.Begin("Debug", ref isDefaultOpen, 0);
 
         using (var defaultWindowSize = new ImVec2())
@@ -537,7 +542,6 @@ sealed class Debug
             defaultWindowSize.Y = 400;
             ImGui.SetWindowSizeVec2(defaultWindowSize, (int)ImGuiCond.FirstUseEver);
         }
-        ;
 
         ImGui.ShowDemoWindow(ref isDefaultOpen2);
 
@@ -557,6 +561,7 @@ sealed class Debug
         if (ImGui.CollapsingHeaderBoolPtr("General", ref isDefaultOpen, 0))
         {
             ImGui.Text($"FPS: {this.context.gameState->fps.ToString("0.##")}");
+            RenderPointer("GameState", this.context.gameState);
         }
 
         if (context.match != null && context.match->isValid())

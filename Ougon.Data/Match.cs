@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+
 namespace Ougon.Data;
 
 [StructLayout(LayoutKind.Explicit)]
@@ -14,6 +16,12 @@ public unsafe struct Match
 
     [FieldOffset(0x28)]
     public GameCharacter* p2Character2;
+
+    [FieldOffset(0x34)]
+    public int* background;
+
+    [FieldOffset(0xB54)]
+    public MatchState matchState;
 
     [FieldOffset(0xB68)]
     public float cameraPositionX;
@@ -43,4 +51,31 @@ public unsafe struct Match
 
     public GameCharacter*[] player2Characters() =>
         new GameCharacter*[] { this.p2Character1, this.p2Character2 };
+
+    // public GameCharacter*[] Characters() => new GameCharacter*[] { this.p1Character1, this.p1Character2, this.p2Character1, this.p2Character2 };
+
+    public Collection<IntPtr> Characters() {
+        var list = new Collection<IntPtr>();
+
+        var p1Characters = this.player1Characters();
+        var p2Characters = this.player2Characters();
+
+        foreach (var character in p1Characters) {
+            list.Add((IntPtr)character);
+        }
+
+        foreach (var character in p2Characters) {
+            list.Add((IntPtr)character);
+        }
+
+        return list;
+    }
+}
+
+public enum MatchState {
+    None = 0,
+    RoundStart = 1,
+    Ongoing = 3,
+    FadeOut = 4,
+    ReturningToCharacterSelect = 5,
 }

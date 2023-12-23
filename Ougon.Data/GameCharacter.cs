@@ -76,6 +76,9 @@ public unsafe struct GameCharacter
     [FieldOffset(0x574)]
     public Sequence* _44;
 
+    [FieldOffset(0x58C)]
+    public Sequence* _block;
+
     [FieldOffset(0x610)]
     public Sequence* far5A;
 
@@ -205,6 +208,36 @@ public unsafe struct GameCharacter
     [FieldOffset(0x2a620)]
     public int existance;
 
+    [FieldOffset(0x2aade)]
+    public int hitstopFrameCount;
+
+    [FieldOffset(0x2aae2)]
+    public int superFreezeFrameCount;
+
+    [FieldOffset(0x2aae6)]
+    public int hitstopFrameBufferCount;
+
+    [FieldOffset(0x2a604)]
+    public GameCharacter* opponent;
+
+    [FieldOffset(0x2a608)]
+    public GameCharacter* partner;
+
+    [FieldOffset(0x2ab0a)]
+    public GameCharacter* lastHitTakenDamage;
+
+    [FieldOffset(0x2a61c)]
+    public AttackState attackState;
+
+    [FieldOffset(0x2a618)]
+    public CharacterState characterState;
+
+    [FieldOffset(0x2ab04)]
+    public ushort comboHitsTaken;
+
+    [FieldOffset(0x2a624)]
+    public ushort sideMessages;
+
     public static Sequence*[] GetSequences(GameCharacter* character)
     {
         var length = 248;
@@ -241,4 +274,22 @@ public unsafe struct GameCharacter
 
         return *spriteAddr;
     }
+}
+
+[Flags]
+public enum AttackState : int {
+    ATTACKING = 0x100000,
+    NONE = 0,
+}
+
+public enum CharacterState : int {
+    NONE = 0,
+    NEUTRAL = 1,
+    UNKNOWN = 110,
+    UNKNOWN2 = 62,
+    UNKNOWN3 = 95,
+    UNKNOWN4 = 100,
+    UNKNOWN5 = 63,
+    UNKNOWN6 = 19,
+    UNKNOWN7 = 40,
 }

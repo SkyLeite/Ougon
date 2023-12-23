@@ -29,5 +29,6 @@ sealed class Module : NinjectModule
         Bind<Context>().ToSelf().InSingletonScope();
         Bind<Hooks.HookService>().ToSelf().InSingletonScope();
         Bind<GUI.Debug>().ToSelf().InSingletonScope();
+        Bind<GUI.FrameData>().ToSelf().InSingletonScope();
     }
 }
