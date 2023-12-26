@@ -512,7 +512,6 @@ sealed class Debug
     private unsafe void RenderDebugWindow()
     {
         bool isDefaultOpen = true;
-        bool isDefaultOpen2 = true;
         ImGui.Begin("Debug", ref isDefaultOpen, 0);
 
         using (var defaultWindowSize = new ImVec2())
@@ -522,8 +521,6 @@ sealed class Debug
             ImGui.SetWindowSizeVec2(defaultWindowSize, (int)ImGuiCond.FirstUseEver);
         }
         ;
-
-        ImGui.ShowDemoWindow(ref isDefaultOpen2);
 
         if (ImGui.CollapsingHeaderBoolPtr("General", ref isDefaultOpen, 0))
         {
