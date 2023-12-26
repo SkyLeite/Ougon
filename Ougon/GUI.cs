@@ -45,18 +45,6 @@ sealed class Debug
             .ConfigureAwait(false);
     }
 
-    private unsafe void RenderPlayerCenter(GameCharacter* character)
-    {
-        var minimum = new Vector2(character->absolutePositionX, character->absolutePositionY);
-        var maximum = new Vector2(
-            character->absolutePositionX,
-            216 + character->inMatch->positionY
-        );
-
-        var dl = igNET.ImGui.GetForegroundDrawList();
-        dl.AddRect(minimum, maximum, igNET.ImGui.GetColorU32(new Vector4(255, 255, 255, 255)));
-    }
-
     private unsafe void RenderHitbox(GameCharacter* character, Hitbox hitbox, Vector4? color)
     {
         if (color == null)
@@ -149,8 +137,6 @@ sealed class Debug
                 ImGui.Text($"CurrentFrameID: {character->currentFrame->sprite_id}");
 
                 var currentFrame = character->currentFrame;
-
-                RenderPlayerCenter(character);
 
                 ImGui.SetNextItemOpen(true, (int)ImGuiCond.Once);
                 if (ImGui.TreeNodeStr($"{name} ({color})"))
