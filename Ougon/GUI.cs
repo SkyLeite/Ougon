@@ -15,8 +15,6 @@ sealed class Debug
     private Hooks.HookService hooks;
     private readonly IReloadedHooks reloadedHooks;
     public Context context;
-    Vector2 initialPosition = new Vector2(0, 0);
-    Vector2 hitboxPositionMax = new Vector2(0, 0);
     bool showHitboxes;
 
     public unsafe Debug(Hooks.HookService hooks, IReloadedHooks reloadedHooks, Context context)
@@ -540,19 +538,6 @@ sealed class Debug
         ;
 
         ImGui.ShowDemoWindow(ref isDefaultOpen2);
-
-        var dl = igNET.ImGui.GetForegroundDrawList();
-        dl.AddRect(
-            initialPosition,
-            hitboxPositionMax,
-            igNET.ImGui.GetColorU32(new Vector4(255, 255, 255, 255))
-        );
-
-        ImGui.DragFloat("MinimumX", ref initialPosition.X, 0, 0, 10800, "%.3f", 0);
-        ImGui.DragFloat("MinimumY", ref initialPosition.Y, 0, 0, 10800, "%.3f", 0);
-
-        ImGui.DragFloat("MaximumX", ref hitboxPositionMax.X, 0, 0, 10800, "%.3f", 0);
-        ImGui.DragFloat("MaximumY", ref hitboxPositionMax.Y, 0, 0, 10800, "%.3f", 0);
 
         if (ImGui.CollapsingHeaderBoolPtr("General", ref isDefaultOpen, 0))
         {
