@@ -1,4 +1,5 @@
 using Ninject.Modules;
+using Ougon.Misc;
 using Ougon.Template;
 using Reloaded.Hooks.Definitions;
 using Reloaded.Mod.Interfaces;
@@ -29,5 +30,6 @@ sealed class Module : NinjectModule
         Bind<Context>().ToSelf().InSingletonScope();
         Bind<Hooks.HookService>().ToSelf().InSingletonScope();
         Bind<GUI.Debug>().ToSelf().InSingletonScope();
+        Bind<FramePacer>().ToSelf();
     }
 }
