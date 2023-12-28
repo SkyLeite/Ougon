@@ -82,6 +82,16 @@
           "Reloaded.Hooks.Definitions": "1.11.0"
         }
       },
+      "SharpDX.DirectInput": {
+        "type": "Direct",
+        "requested": "[4.2.0, )",
+        "resolved": "4.2.0",
+        "contentHash": "is6Lm9zULyeTbUaLXktF+MwzmUYE8jofhA+6qgR1HBIyRJ/c2rZbeG1VvvGf4w6ktfq/q3AvUWTNzwgdU/+XOg==",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1",
+          "SharpDX": "4.2.0"
+        }
+      },
       "TextCopy": {
         "type": "Direct",
         "requested": "[6.2.1, )",

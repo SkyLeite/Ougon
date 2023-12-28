@@ -14,14 +14,16 @@ sealed class Debug
     public bool isActive;
     private Hooks.HookService hooks;
     private readonly IReloadedHooks reloadedHooks;
+    private readonly InputConfig inputConfig;
     public Context context;
     bool showHitboxes;
 
-    public unsafe Debug(Hooks.HookService hooks, IReloadedHooks reloadedHooks, Context context)
+    public unsafe Debug(Hooks.HookService hooks, IReloadedHooks reloadedHooks, Context context, InputConfig inputConfig)
     {
         this.hooks = hooks;
         this.context = context;
         this.reloadedHooks = reloadedHooks;
+        this.inputConfig = inputConfig;
 
         Task.Run(() => InitializeImgui());
     }
@@ -511,6 +513,8 @@ sealed class Debug
 
     private unsafe void RenderDebugWindow()
     {
+        this.inputConfig.Render();
+
         bool isDefaultOpen = true;
         ImGui.Begin("Debug", ref isDefaultOpen, 0);
 
