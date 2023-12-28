@@ -9,7 +9,7 @@ namespace Ougon
         public double fps;
 
         [FieldOffset(0x4b4)]
-        public bool debugDisabled;
+        public bool debugEnabled;
 
         [FieldOffset(0x3c)]
         public bool isFullScreen;
